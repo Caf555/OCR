@@ -40,888 +40,422 @@
             background: var(--bg-primary);
             color: var(--text-primary);
         }
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            max-height: 100vh;
-        }
+        .app-container { display: flex; flex-direction: column; height: 100vh; }
         /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
         }
-        .header h1 {
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+        .header h1 { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .header-actions { display: flex; gap: 6px; align-items: center; }
         .btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 4px;
         }
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
+        .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: var(--accent-hover); }
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
+        .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); }
         .btn-secondary:hover { background: var(--border); }
-        .btn-icon {
-            padding: 6px;
-            background: transparent;
-            color: var(--text-secondary);
-        }
+        .btn-icon { padding: 5px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer; }
         .btn-icon:hover { color: var(--text-primary); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Model Selector */
+        .model-selector-container {
+            display: flex; align-items: center; gap: 4px;
+            padding: 3px 6px; background: var(--bg-tertiary);
+            border-radius: 4px; border: 1px solid var(--border);
+        }
+        .model-selector-container label { font-size: 10px; color: var(--text-secondary); }
+        .model-selector-container select {
+            padding: 3px 6px; background: var(--bg-secondary);
+            border: 1px solid var(--border); border-radius: 3px;
+            color: var(--text-primary); font-size: 10px; min-width: 140px;
+        }
         /* Main Content */
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            min-height: 0;
-        }
-        /* Left Panel - Image */
-        .left-panel {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border);
-            min-width: 300px;
-        }
+        .main-content { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+        /* Left Panel */
+        .left-panel { width: 50%; display: flex; flex-direction: column; border-right: 1px solid var(--border); min-width: 280px; }
         .image-toolbar {
-            display: flex;
-            gap: 4px;
-            padding: 6px 8px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
+            display: flex; gap: 3px; padding: 4px 6px;
+            background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+            flex-wrap: wrap; align-items: center;
         }
-        .toolbar-group {
-            display: flex;
-            gap: 2px;
-            padding-right: 8px;
-            border-right: 1px solid var(--border);
-        }
+        .toolbar-group { display: flex; gap: 2px; padding-right: 6px; border-right: 1px solid var(--border); }
         .toolbar-group:last-child { border-right: none; }
-        .image-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            background: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .image-container { flex: 1; position: relative; overflow: hidden; background: var(--bg-primary); }
+        .image-wrapper {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); cursor: grab;
         }
+        .image-wrapper.dragging { cursor: grabbing; }
+        .image-wrapper canvas { display: block; max-width: none; }
         .drop-zone {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed var(--border);
-            margin: 8px;
-            border-radius: 8px;
-            transition: all 0.3s;
-            cursor: pointer;
+            position: absolute; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border: 2px dashed var(--border); margin: 6px; border-radius: 6px;
+            transition: all 0.3s; cursor: pointer;
         }
-        .drop-zone.active {
-            border-color: var(--accent);
-            background: rgba(233, 69, 96, 0.1);
-        }
+        .drop-zone.active { border-color: var(--accent); background: rgba(233, 69, 96, 0.1); }
         .drop-zone.hidden { display: none; }
-        .drop-zone-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
-        .drop-zone-text { color: var(--text-secondary); font-size: 14px; }
-        .drop-zone-hint { color: var(--text-secondary); font-size: 11px; margin-top: 8px; }
-        #imageCanvas {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            cursor: crosshair;
-        }
+        .drop-zone-icon { font-size: 36px; margin-bottom: 8px; opacity: 0.5; }
+        .drop-zone-text { color: var(--text-secondary); font-size: 12px; }
+        .drop-zone-hint { color: var(--text-secondary); font-size: 10px; margin-top: 6px; }
         .selection-box {
-            position: absolute;
-            border: 2px solid var(--accent);
-            background: rgba(233, 69, 96, 0.2);
-            pointer-events: none;
-            display: none;
+            position: absolute; border: 2px solid var(--accent);
+            background: rgba(233, 69, 96, 0.2); pointer-events: none; display: none;
+        }
+        .zoom-indicator {
+            position: absolute; bottom: 6px; left: 6px;
+            background: rgba(0,0,0,0.7); color: white;
+            padding: 3px 6px; border-radius: 3px; font-size: 10px;
         }
         /* Thumbnails */
         .thumbnails-bar {
-            display: flex;
-            gap: 4px;
-            padding: 6px 8px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            overflow-x: auto;
-            flex-shrink: 0;
-            min-height: 60px;
+            display: flex; gap: 3px; padding: 4px 6px;
+            background: var(--bg-secondary); border-top: 1px solid var(--border);
+            overflow-x: auto; flex-shrink: 0; min-height: 50px;
         }
-        .thumbnail {
-            width: 48px;
-            height: 48px;
-            border-radius: 4px;
-            object-fit: cover;
-            cursor: pointer;
-            border: 2px solid transparent;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
+        .thumbnail { width: 40px; height: 40px; border-radius: 3px; object-fit: cover; cursor: pointer; border: 2px solid transparent; flex-shrink: 0; }
         .thumbnail.active { border-color: var(--accent); }
-        .thumbnail:hover { opacity: 0.8; }
-        .thumbnail-wrapper {
-            position: relative;
-        }
+        .thumbnail-wrapper { position: relative; }
         .thumbnail-close {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 16px;
-            height: 16px;
-            background: var(--accent);
-            border-radius: 50%;
-            border: none;
-            color: white;
-            font-size: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: -3px; right: -3px; width: 14px; height: 14px;
+            background: var(--accent); border-radius: 50%; border: none;
+            color: white; font-size: 9px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
         .page-indicator {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            font-size: 9px;
-            padding: 1px 4px;
-            border-radius: 2px;
+            position: absolute; bottom: 1px; right: 1px;
+            background: rgba(0,0,0,0.7); color: white;
+            font-size: 8px; padding: 1px 3px; border-radius: 2px;
         }
-        /* Right Panel - Results */
-        .right-panel {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-            min-width: 300px;
-        }
-        .mode-selector {
-            display: flex;
-            gap: 4px;
-            padding: 6px 8px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-        .mode-btn {
-            padding: 4px 10px;
-            border: 1px solid var(--border);
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            transition: all 0.2s;
-        }
-        .mode-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-        .mode-btn:hover:not(.active) { background: var(--border); }
-        .custom-prompt-container {
-            padding: 6px 8px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            display: none;
-        }
-        .custom-prompt-container.visible { display: block; }
-        .custom-prompt-input {
-            width: 100%;
-            padding: 6px 8px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 12px;
-            resize: none;
-        }
-        .result-tabs {
-            display: flex;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-        }
-        .result-tab {
-            padding: 6px 16px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 12px;
+        /* Right Panel */
+        .right-panel { width: 50%; display: flex; flex-direction: column; min-width: 280px; }
+        .right-tabs { display: flex; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+        .right-tab {
+            padding: 6px 12px; border: none; background: transparent;
+            color: var(--text-secondary); cursor: pointer; font-size: 11px;
             border-bottom: 2px solid transparent;
-            transition: all 0.2s;
         }
-        .result-tab.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
+        .right-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-content { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+        .tab-content.active { display: flex; }
+        /* OCR Controls */
+        .ocr-controls { padding: 6px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+        .ocr-mode-row { display: flex; gap: 4px; margin-bottom: 6px; flex-wrap: wrap; }
+        .mode-btn {
+            padding: 3px 8px; border: 1px solid var(--border);
+            background: var(--bg-tertiary); color: var(--text-secondary);
+            border-radius: 3px; cursor: pointer; font-size: 10px;
         }
-        .result-container {
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
+        .mode-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+        .ocr-scope-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .ocr-scope-row label { font-size: 10px; display: flex; align-items: center; gap: 3px; cursor: pointer; }
+        .output-format-row { display: flex; gap: 4px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+        .output-format-row label { font-size: 10px; color: var(--text-secondary); }
+        .output-format-row select {
+            padding: 3px 6px; background: var(--bg-tertiary);
+            border: 1px solid var(--border); border-radius: 3px;
+            color: var(--text-primary); font-size: 10px;
         }
-        .result-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-            font-size: 13px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-word;
+        /* Result */
+        .result-container { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        .result-content { flex: 1; overflow-y: auto; padding: 8px; font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+        .result-actions { display: flex; gap: 3px; padding: 4px 6px; background: var(--bg-secondary); border-top: 1px solid var(--border); flex-wrap: wrap; }
+        .result-file-header { background: var(--bg-tertiary); padding: 6px 8px; margin: 8px 0 4px 0; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .result-page-header { color: var(--accent); font-size: 10px; margin: 8px 0 4px 0; padding-bottom: 2px; border-bottom: 1px dashed var(--border); }
+        /* Queue */
+        .queue-container { flex: 1; overflow-y: auto; padding: 6px; }
+        .queue-item { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 6px; }
+        .queue-item.active { border-color: var(--accent); }
+        .queue-item-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 8px; background: var(--bg-secondary); cursor: pointer;
         }
-        .result-content.hidden { display: none; }
-        .compare-container {
-            display: none;
-            flex: 1;
-            overflow: hidden;
+        .queue-item-name { font-size: 11px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .queue-item-actions { display: flex; gap: 2px; }
+        .queue-item-actions button {
+            padding: 2px 4px; font-size: 10px; background: var(--bg-tertiary);
+            border: 1px solid var(--border); color: var(--text-primary);
+            border-radius: 2px; cursor: pointer;
         }
-        .compare-container.visible {
-            display: flex;
+        .queue-item-actions button:hover { background: var(--border); }
+        .queue-item-body { padding: 6px 8px; font-size: 10px; }
+        .queue-page-input {
+            width: 100%; padding: 4px 6px; background: var(--bg-primary);
+            border: 1px solid var(--border); border-radius: 3px;
+            color: var(--text-primary); font-size: 10px; margin-top: 4px;
         }
-        .compare-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border);
-        }
-        .compare-panel:last-child { border-right: none; }
-        .compare-header {
-            padding: 6px 8px;
-            background: var(--bg-tertiary);
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .compare-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px;
-            font-size: 12px;
-        }
-        .compare-content[contenteditable="true"] {
-            outline: none;
-            background: var(--bg-primary);
-        }
-        .result-actions {
-            display: flex;
-            gap: 4px;
-            padding: 6px 8px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
+        .queue-page-info { color: var(--text-secondary); margin-top: 3px; }
+        .queue-page-error { color: var(--accent); font-size: 9px; margin-top: 2px; }
+        .queue-summary { padding: 6px 8px; background: var(--bg-secondary); border-top: 1px solid var(--border); font-size: 10px; color: var(--text-secondary); }
+        .queue-actions { padding: 6px; background: var(--bg-secondary); border-top: 1px solid var(--border); display: flex; gap: 4px; flex-wrap: wrap; }
         /* Status Bar */
         .status-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 12px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            font-size: 11px;
-            color: var(--text-secondary);
-            flex-shrink: 0;
+            display: flex; justify-content: space-between; padding: 3px 10px;
+            background: var(--bg-secondary); border-top: 1px solid var(--border);
+            font-size: 10px; color: var(--text-secondary); flex-shrink: 0;
         }
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text-secondary);
-        }
+        .status-item { display: flex; align-items: center; gap: 4px; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); }
         .status-dot.online { background: var(--success); }
         .status-dot.offline { background: var(--accent); }
-        /* Settings Modal */
+        /* Modal */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-overlay.visible { display: flex; }
         .modal {
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px var(--shadow);
+            background: var(--bg-secondary); border-radius: 6px;
+            width: 90%; max-width: 450px; max-height: 80vh;
+            overflow-y: auto; box-shadow: 0 4px 20px var(--shadow);
         }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        .modal-header h2 { font-size: 13px; }
+        .modal-body { padding: 12px; }
+        .modal-footer { padding: 10px 12px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 6px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; margin-bottom: 3px; color: var(--text-secondary); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 6px 8px; background: var(--bg-tertiary);
+            border: 1px solid var(--border); border-radius: 4px;
+            color: var(--text-primary); font-size: 11px;
         }
-        .modal-header h2 { font-size: 14px; }
-        .modal-body { padding: 16px; }
-        .form-group {
-            margin-bottom: 12px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            margin-bottom: 4px;
-            color: var(--text-secondary);
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 12px;
-        }
-        .form-group input[type="range"] {
-            padding: 0;
-        }
-        .range-value {
-            display: inline-block;
-            margin-left: 8px;
-            color: var(--accent);
-        }
-        .modal-footer {
-            padding: 12px 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-        }
-        /* History Panel */
-        .history-item {
-            padding: 8px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .history-item:hover { background: var(--bg-tertiary); }
-        .history-time { font-size: 10px; color: var(--text-secondary); }
-        .history-preview {
-            font-size: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-top: 4px;
-        }
+        .range-value { display: inline-block; margin-left: 6px; color: var(--accent); }
         /* Loading */
         .loading-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 100;
+            position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column; gap: 8px; z-index: 100;
         }
         .loading-overlay.visible { display: flex; }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-content { flex-direction: column; }
-            .left-panel, .right-panel {
-                width: 100%;
-                height: 50%;
-                border-right: none;
-            }
-            .left-panel { border-bottom: 1px solid var(--border); }
-        }
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
         /* Toast */
-        .toast-container {
-            position: fixed;
-            top: 60px;
-            right: 16px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .toast {
-            padding: 10px 16px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            box-shadow: 0 2px 10px var(--shadow);
-            font-size: 12px;
-            animation: slideIn 0.3s ease;
-        }
+        .toast-container { position: fixed; top: 50px; right: 12px; z-index: 2000; display: flex; flex-direction: column; gap: 6px; }
+        .toast { padding: 8px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 2px 10px var(--shadow); font-size: 11px; animation: slideIn 0.3s ease; }
         .toast.success { border-left: 3px solid var(--success); }
         .toast.error { border-left: 3px solid var(--accent); }
         .toast.info { border-left: 3px solid var(--warning); }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        /* Progress */
+        .progress-bar { height: 3px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; margin-top: 4px; width: 80%; }
+        .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content { flex-direction: column; }
+            .left-panel, .right-panel { width: 100%; height: 50%; border-right: none; }
+            .left-panel { border-bottom: 1px solid var(--border); }
         }
-        /* File Input */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         .file-input { display: none; }
-        /* Zoom indicator */
-        .zoom-indicator {
-            position: absolute;
-            bottom: 8px;
-            left: 8px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-        /* Model Selector in Header */
-        .model-selector-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 8px;
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-            border: 1px solid var(--border);
-        }
-        .model-selector-container label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-        .model-selector-container select {
-            padding: 4px 8px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 11px;
-            min-width: 160px;
-            cursor: pointer;
-        }
-        .model-selector-container .refresh-btn {
-            padding: 4px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .model-selector-container .refresh-btn:hover {
-            color: var(--accent);
-        }
-        .model-selector-container .refresh-btn.loading svg {
-            animation: spin 1s linear infinite;
-        }
-        /* PDF Page Range Styles */
-        .page-range-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 6px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 8px;
-            background: var(--bg-primary);
-            border-radius: 4px;
-            margin: 8px 0;
-        }
-        .page-checkbox {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-        .page-checkbox:hover {
-            border-color: var(--accent);
-        }
-        .page-checkbox.selected {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-        .range-input-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .range-input-group input {
-            width: 80px;
-            padding: 6px 8px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 12px;
-            text-align: center;
-        }
-        .range-input-group span {
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-        .quick-select-btns {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        .quick-select-btns button {
-            padding: 4px 10px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 11px;
-            cursor: pointer;
-        }
-        .quick-select-btns button:hover {
-            background: var(--border);
-        }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="header">
-            <h1>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 16v-4M12 8h.01"/>
-                </svg>
-                Qwen3-VL OCR
-            </h1>
+            <h1>🔍 Qwen3-VL OCR</h1>
             <div class="header-actions">
                 <div class="model-selector-container">
                     <label>模型:</label>
-                    <select id="headerModelSelect">
-                        <option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>
-                    </select>
-                    <button class="refresh-btn" id="headerRefreshModels" title="重新整理模型列表">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
-                        </svg>
-                    </button>
+                    <select id="headerModelSelect"><option value="qwen3-vl-8b-instruct">Qwen3-VL-8B</option></select>
+                    <button class="btn-icon" id="headerRefreshModels" title="重新整理">🔄</button>
                 </div>
-                <button class="btn btn-icon" id="themeToggle" title="切換主題">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                </button>
-                <button class="btn btn-icon" id="historyBtn" title="歷史記錄">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                </button>
-                <button class="btn btn-secondary" id="settingsBtn">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
-                    </svg>
-                    設定
-                </button>
-                <button class="btn btn-primary" id="startOCR">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="5 3 19 12 5 21 5 3"/>
-                    </svg>
-                    開始識別
-                </button>
+                <button class="btn btn-icon" id="themeToggle" title="切換主題">🌙</button>
+                <button class="btn btn-secondary" id="settingsBtn">設定</button>
+                <button class="btn btn-primary" id="startOCR">開始識別</button>
             </div>
         </header>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Left Panel - Image -->
             <section class="left-panel">
                 <div class="image-toolbar">
                     <div class="toolbar-group">
-                        <button class="btn btn-icon" id="openFile" title="開啟檔案">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="pasteImage" title="貼上圖片 (Ctrl+V)">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="cameraCapture" title="攝影機拍照">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                                <circle cx="12" cy="13" r="4"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="loadUrl" title="從網址載入">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <line x1="2" y1="12" x2="22" y2="12"/>
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                            </svg>
-                        </button>
+                        <button class="btn btn-icon" id="openFile" title="開啟檔案">📂</button>
+                        <button class="btn btn-icon" id="cameraCapture" title="攝影機">📷</button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="btn btn-icon" id="rotateLeft" title="向左旋轉">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .57-8.38"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="rotateRight" title="向右旋轉">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="zoomIn" title="放大">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                                <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="zoomOut" title="縮小">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                                <line x1="8" y1="11" x2="14" y2="11"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="zoomFit" title="適應視窗">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                            </svg>
-                        </button>
+                        <button class="btn btn-icon" id="rotateLeft" title="向左旋轉">↺</button>
+                        <button class="btn btn-icon" id="rotateRight" title="向右旋轉">↻</button>
+                        <button class="btn btn-icon" id="zoomIn" title="放大">🔍+</button>
+                        <button class="btn btn-icon" id="zoomOut" title="縮小">🔍-</button>
+                        <button class="btn btn-icon" id="zoomFit" title="適應">⊡</button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="btn btn-icon" id="selectRegion" title="框選區域 OCR">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-dasharray="4"/>
-                            </svg>
-                        </button>
-                        <button class="btn btn-icon" id="clearSelection" title="清除選取">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="toolbar-group">
-                        <button class="btn btn-icon" id="clearAll" title="清除全部">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                            </svg>
-                        </button>
+                        <button class="btn btn-icon" id="selectRegion" title="框選區域">▢</button>
+                        <button class="btn btn-icon" id="clearAll" title="清除全部">🗑</button>
                     </div>
                 </div>
                 <div class="image-container" id="imageContainer">
                     <div class="drop-zone" id="dropZone">
                         <div class="drop-zone-icon">📄</div>
                         <div class="drop-zone-text">拖放圖片或 PDF 至此處</div>
-                        <div class="drop-zone-hint">支援 JPG、PNG、GIF、WebP、PDF | Ctrl+V 貼上 | 點擊上傳</div>
+                        <div class="drop-zone-hint">支援 JPG、PNG、PDF | Ctrl+V 貼上</div>
                     </div>
-                    <canvas id="imageCanvas"></canvas>
+                    <div class="image-wrapper" id="imageWrapper" style="display:none;">
+                        <canvas id="imageCanvas"></canvas>
+                    </div>
                     <div class="selection-box" id="selectionBox"></div>
                     <div class="zoom-indicator" id="zoomIndicator" style="display:none;">100%</div>
-                    <div class="loading-overlay" id="imageLoading">
-                        <div class="spinner"></div>
-                        <span>處理中...</span>
-                    </div>
+                    <div class="loading-overlay" id="imageLoading"><div class="spinner"></div><span>處理中...</span></div>
                 </div>
                 <div class="thumbnails-bar" id="thumbnailsBar"></div>
             </section>
 
-            <!-- Right Panel - Results -->
             <section class="right-panel">
-                <div class="mode-selector">
-                    <button class="mode-btn active" data-mode="text">純文字</button>
-                    <button class="mode-btn" data-mode="structured">結構化</button>
-                    <button class="mode-btn" data-mode="table">表格</button>
-                    <button class="mode-btn" data-mode="handwriting">手寫</button>
-                    <button class="mode-btn" data-mode="multilang">多語言</button>
-                    <button class="mode-btn" data-mode="custom">自訂</button>
+                <div class="right-tabs">
+                    <button class="right-tab active" data-tab="result">識別結果</button>
+                    <button class="right-tab" data-tab="queue">待辨識清單</button>
+                    <button class="right-tab" data-tab="history">歷史記錄</button>
                 </div>
-                <div class="custom-prompt-container" id="customPromptContainer">
-                    <textarea class="custom-prompt-input" id="customPrompt" rows="2" placeholder="輸入自訂識別指令..."></textarea>
-                </div>
-                <div class="result-tabs">
-                    <button class="result-tab active" data-tab="result">識別結果</button>
-                    <button class="result-tab" data-tab="compare">比對校正</button>
-                    <button class="result-tab" data-tab="history">歷史記錄</button>
-                </div>
-                <div class="result-container">
-                    <div class="result-content" id="resultContent" data-tab-content="result">
-                        <span style="color: var(--text-secondary);">識別結果將顯示於此...</span>
-                    </div>
-                    <div class="compare-container" data-tab-content="compare">
-                        <div class="compare-panel">
-                            <div class="compare-header">原始識別結果</div>
-                            <div class="compare-content" id="compareOriginal"></div>
+
+                <div class="tab-content active" data-tab-content="result">
+                    <div class="ocr-controls">
+                        <div class="ocr-mode-row">
+                            <button class="mode-btn active" data-mode="text">純文字</button>
+                            <button class="mode-btn" data-mode="structured">結構化</button>
+                            <button class="mode-btn" data-mode="table">表格</button>
+                            <button class="mode-btn" data-mode="handwriting">手寫</button>
+                            <button class="mode-btn" data-mode="multilang">多語言</button>
+                            <button class="mode-btn" data-mode="custom">自訂</button>
                         </div>
-                        <div class="compare-panel">
-                            <div class="compare-header">校正編輯（可編輯）</div>
-                            <div class="compare-content" id="compareEdited" contenteditable="true"></div>
+                        <div class="ocr-scope-row">
+                            <label><input type="radio" name="ocrScope" value="current" checked> 當前頁面</label>
+                            <label><input type="radio" name="ocrScope" value="task"> 當前工作</label>
+                            <label><input type="radio" name="ocrScope" value="all"> 全部清單</label>
+                        </div>
+                        <div class="output-format-row">
+                            <label>輸出格式:</label>
+                            <select id="outputFormat">
+                                <option value="txt">TXT</option>
+                                <option value="md">Markdown</option>
+                                <option value="json">JSON</option>
+                                <option value="docx">Word</option>
+                                <option value="xlsx">Excel</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="result-content hidden" data-tab-content="history" id="historyContent"></div>
-                    <div class="loading-overlay" id="resultLoading">
-                        <div class="spinner"></div>
-                        <span id="loadingText">識別中...</span>
+                    <div class="result-container">
+                        <div class="result-content" id="resultContent"><span style="color:var(--text-secondary)">識別結果將顯示於此...</span></div>
+                        <div class="loading-overlay" id="resultLoading">
+                            <div class="spinner"></div>
+                            <span id="loadingText">識別中...</span>
+                            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button class="btn btn-secondary" id="copyResult">複製</button>
+                        <button class="btn btn-secondary" id="saveResult">儲存</button>
+                        <button class="btn btn-secondary" id="clearResult">清除</button>
                     </div>
                 </div>
-                <div class="result-actions">
-                    <button class="btn btn-secondary" id="copyResult">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
-                        複製
-                    </button>
-                    <button class="btn btn-secondary" id="exportTxt">匯出 TXT</button>
-                    <button class="btn btn-secondary" id="exportMd">匯出 MD</button>
-                    <button class="btn btn-secondary" id="exportJson">匯出 JSON</button>
-                    <button class="btn btn-secondary" id="exportCsv">匯出 CSV</button>
-                    <button class="btn btn-secondary" id="clearResult">清除</button>
+
+                <div class="tab-content" data-tab-content="queue">
+                    <div class="queue-container" id="queueContainer">
+                        <p style="color:var(--text-secondary);text-align:center;padding:20px;font-size:11px;">尚無待辨識項目<br>請上傳檔案後加入清單</p>
+                    </div>
+                    <div class="queue-summary" id="queueSummary">總計: 0 個檔案, 0 頁</div>
+                    <div class="queue-actions">
+                        <button class="btn btn-secondary" id="addToQueue">加入清單</button>
+                        <button class="btn btn-secondary" id="clearQueue">清空</button>
+                        <button class="btn btn-primary" id="processQueue">辨識全部</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" data-tab-content="history">
+                    <div class="result-content" id="historyContent"><p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p></div>
+                    <div class="result-actions"><button class="btn btn-secondary" id="clearHistory">清除歷史</button></div>
                 </div>
             </section>
         </main>
 
-        <!-- Status Bar -->
         <footer class="status-bar">
-            <div class="status-item">
-                <span class="status-dot" id="connectionStatus"></span>
-                <span id="connectionText">檢查連線中...</span>
-            </div>
-            <div class="status-item">
-                <span id="processTime">處理時間: --</span>
-            </div>
-            <div class="status-item">
-                <span id="tokenUsage">Token: --</span>
-            </div>
-            <div class="status-item">
-                <span id="imageInfo">圖片: --</span>
-            </div>
+            <div class="status-item"><span class="status-dot" id="connectionStatus"></span><span id="connectionText">檢查連線...</span></div>
+            <div class="status-item"><span id="processTime">處理時間: --</span></div>
+            <div class="status-item"><span id="imageInfo">圖片: --</span></div>
         </footer>
     </div>
 
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2>⚙️ 設定</h2>
-                <button class="btn btn-icon" id="closeSettings">✕</button>
-            </div>
+            <div class="modal-header"><h2>設定</h2><button class="btn btn-icon" id="closeSettings">✕</button></div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>API 端點</label>
                     <input type="text" id="apiEndpoint" value="http://localhost:1234/v1/chat/completions">
                 </div>
                 <div class="form-group">
-                    <label>模型名稱（留空自動偵測）</label>
-                    <select id="modelSelect">
-                        <option value="">自動偵測</option>
-                    </select>
-                    <button class="btn btn-secondary" id="refreshModels" style="margin-top:4px;">重新整理模型列表</button>
-                </div>
-                <div class="form-group">
-                    <label>自訂模型名稱</label>
-                    <input type="text" id="customModel" placeholder="輸入自訂模型名稱...">
-                </div>
-                <div class="form-group">
-                    <label>Temperature（精確度）<span class="range-value" id="tempValue">0.1</span></label>
+                    <label>Temperature <span class="range-value" id="tempValue">0.1</span></label>
                     <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.1">
                 </div>
                 <div class="form-group">
-                    <label>最大 Token 數<span class="range-value" id="maxTokensValue">4096</span></label>
+                    <label>最大 Token <span class="range-value" id="maxTokensValue">4096</span></label>
                     <input type="range" id="maxTokens" min="256" max="16384" step="256" value="4096">
                 </div>
                 <div class="form-group">
-                    <label>圖片最大解析度（像素）</label>
+                    <label>圖片最大解析度</label>
                     <select id="maxResolution">
-                        <option value="1024">1024 (快速)</option>
-                        <option value="1536">1536 (平衡)</option>
-                        <option value="2048" selected>2048 (高品質)</option>
-                        <option value="3072">3072 (極致)</option>
+                        <option value="1024">1024</option>
+                        <option value="1536">1536</option>
+                        <option value="2048" selected>2048</option>
                         <option value="0">不壓縮</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>圖片品質 (JPEG)</label>
-                    <input type="range" id="imageQuality" min="0.5" max="1" step="0.05" value="0.85">
-                    <span class="range-value" id="qualityValue">85%</span>
+                    <label>自訂 Prompt</label>
+                    <textarea id="customPrompt" rows="2" placeholder="自訂識別指令..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>輸出資料夾</label>
+                    <input type="text" id="outputPathDisplay" value="C:\AI_Tools\qwenocr\output" readonly>
+                    <button class="btn btn-secondary" id="selectOutputFolder" style="margin-top:4px;">選擇資料夾</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="resetSettings">重設預設值</button>
-                <button class="btn btn-primary" id="saveSettings">儲存設定</button>
+                <button class="btn btn-secondary" id="resetSettings">重設</button>
+                <button class="btn btn-primary" id="saveSettings">儲存</button>
             </div>
         </div>
     </div>
 
-    <!-- History Modal -->
-    <div class="modal-overlay" id="historyModal">
+    <!-- PDF Page Modal -->
+    <div class="modal-overlay" id="pdfPageModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2>📜 歷史記錄</h2>
-                <button class="btn btn-icon" id="closeHistory">✕</button>
-            </div>
-            <div class="modal-body" id="historyList" style="max-height:400px;overflow-y:auto;">
-                <p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p>
+            <div class="modal-header"><h2>選擇 PDF 頁面</h2><button class="btn btn-icon" id="closePdfPage">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>檔案: <span id="pdfFileName">-</span></label><br>
+                    <label>總頁數: <span id="pdfTotalPages">-</span> 頁</label>
+                </div>
+                <div class="form-group">
+                    <label>輸入頁面範圍</label>
+                    <input type="text" id="pdfPageInput" placeholder="例: 1,3,5-10,15">
+                    <div style="font-size:10px;color:var(--text-secondary);margin-top:4px;">
+                        格式: 逗號分隔單頁，減號表示連續範圍<br>例: 1,3,5-10,15
+                    </div>
+                    <div id="pdfPageError" style="color:var(--accent);font-size:10px;margin-top:4px;display:none;"></div>
+                    <div id="pdfPagePreview" style="color:var(--success);font-size:10px;margin-top:4px;"></div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="clearHistory">清除全部歷史</button>
+                <button class="btn btn-secondary" id="cancelPdfPage">取消</button>
+                <button class="btn btn-primary" id="confirmPdfPages">載入</button>
             </div>
         </div>
     </div>
@@ -929,12 +463,9 @@
     <!-- Camera Modal -->
     <div class="modal-overlay" id="cameraModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2>📷 攝影機拍照</h2>
-                <button class="btn btn-icon" id="closeCamera">✕</button>
-            </div>
+            <div class="modal-header"><h2>攝影機拍照</h2><button class="btn btn-icon" id="closeCamera">✕</button></div>
             <div class="modal-body" style="text-align:center;">
-                <video id="cameraVideo" autoplay playsinline style="width:100%;max-height:300px;background:#000;border-radius:4px;"></video>
+                <video id="cameraVideo" autoplay playsinline style="width:100%;max-height:250px;background:#000;border-radius:4px;"></video>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="cancelCamera">取消</button>
@@ -943,1417 +474,632 @@
         </div>
     </div>
 
-    <!-- URL Input Modal -->
-    <div class="modal-overlay" id="urlModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>🔗 從網址載入</h2>
-                <button class="btn btn-icon" id="closeUrl">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>圖片網址</label>
-                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelUrl">取消</button>
-                <button class="btn btn-primary" id="loadImageUrl">載入</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- PDF Page Range Modal -->
-    <div class="modal-overlay" id="pdfPageModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>📄 選擇 PDF 頁面</h2>
-                <button class="btn btn-icon" id="closePdfPage">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>檔案名稱: <span id="pdfFileName">-</span></label>
-                    <label>總頁數: <span id="pdfTotalPages">-</span> 頁</label>
-                </div>
-                <div class="form-group">
-                    <label>頁面範圍</label>
-                    <div class="range-input-group">
-                        <input type="number" id="pdfStartPage" min="1" value="1" placeholder="起始">
-                        <span>至</span>
-                        <input type="number" id="pdfEndPage" min="1" value="1" placeholder="結束">
-                        <button class="btn btn-secondary" id="applyPageRange">套用範圍</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>快速選取</label>
-                    <div class="quick-select-btns">
-                        <button id="selectAllPages">全選</button>
-                        <button id="selectNonePages">取消全選</button>
-                        <button id="selectOddPages">奇數頁</button>
-                        <button id="selectEvenPages">偶數頁</button>
-                        <button id="selectFirst10">前 10 頁</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>點選頁面（已選: <span id="selectedPageCount">0</span> 頁）</label>
-                    <div class="page-range-grid" id="pageRangeGrid"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelPdfPage">取消</button>
-                <button class="btn btn-primary" id="confirmPdfPages">載入選取頁面</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Hidden File Input -->
     <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf" multiple>
 
-    <!-- PDF.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.2.0/docx.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script>
-        // ==================== App State ====================
-        const state = {
-            images: [], // { id, canvas, originalFile, rotation, thumbnail }
-            currentIndex: -1,
-            zoom: 1,
-            rotation: 0,
-            isSelecting: false,
-            selectionStart: null,
-            selectionRect: null,
-            currentMode: 'text',
-            settings: {
-                apiEndpoint: 'http://localhost:1234/v1/chat/completions',
-                model: 'qwen3-vl-8b-instruct',
-                customModel: '',
-                temperature: 0.1,
-                maxTokens: 4096,
-                maxResolution: 2048,
-                imageQuality: 0.85
-            },
-            history: [],
-            lastResult: '',
-            isOnline: false,
-            // PDF page selection state
-            pendingPdf: null,
-            pdfNumPages: 0,
-            selectedPdfPages: new Set(),
-            availableModels: []
+    const state = {
+        images: [], currentIndex: -1, zoom: 1, rotation: 0,
+        panX: 0, panY: 0, isPanning: false, panStart: { x: 0, y: 0 },
+        isSelecting: false, selectionRect: null,
+        currentMode: 'text', ocrScope: 'current', outputFormat: 'txt',
+        settings: {
+            apiEndpoint: 'http://localhost:1234/v1/chat/completions',
+            model: 'qwen3-vl-8b-instruct',
+            temperature: 0.1, maxTokens: 4096, maxResolution: 2048
+        },
+        queue: [], currentQueueIndex: -1, results: {}, history: [],
+        lastResult: '', isOnline: false,
+        pendingPdf: null, pdfNumPages: 0, outputDirHandle: null
+    };
+
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSettings(); loadHistory(); setupEvents();
+        checkConnection(); refreshModels();
+        setInterval(checkConnection, 30000);
+    });
+
+    function loadSettings() {
+        const s = localStorage.getItem('qwen-ocr-settings');
+        if (s) Object.assign(state.settings, JSON.parse(s));
+        applySettings();
+    }
+
+    function applySettings() {
+        $('#apiEndpoint').value = state.settings.apiEndpoint;
+        $('#temperature').value = state.settings.temperature;
+        $('#tempValue').textContent = state.settings.temperature;
+        $('#maxTokens').value = state.settings.maxTokens;
+        $('#maxTokensValue').textContent = state.settings.maxTokens;
+        $('#maxResolution').value = state.settings.maxResolution;
+        $('#headerModelSelect').value = state.settings.model;
+    }
+
+    function saveSettings() {
+        state.settings.apiEndpoint = $('#apiEndpoint').value;
+        state.settings.temperature = parseFloat($('#temperature').value);
+        state.settings.maxTokens = parseInt($('#maxTokens').value);
+        state.settings.maxResolution = parseInt($('#maxResolution').value);
+        localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings));
+        toast('設定已儲存', 'success');
+        $('#settingsModal').classList.remove('visible');
+    }
+
+    function setupEvents() {
+        $('#dropZone').onclick = () => $('#fileInput').click();
+        $('#dropZone').ondragover = e => { e.preventDefault(); $('#dropZone').classList.add('active'); };
+        $('#dropZone').ondragleave = () => $('#dropZone').classList.remove('active');
+        $('#dropZone').ondrop = e => { e.preventDefault(); $('#dropZone').classList.remove('active'); processFiles([...e.dataTransfer.files]); };
+        $('#fileInput').onchange = e => { processFiles([...e.target.files]); e.target.value = ''; };
+        document.onpaste = e => { for (const i of e.clipboardData.items) if (i.type.startsWith('image/')) { processFiles([i.getAsFile()]); break; } };
+
+        $('#openFile').onclick = () => $('#fileInput').click();
+        $('#cameraCapture').onclick = openCamera;
+        $('#rotateLeft').onclick = () => rotate(-90);
+        $('#rotateRight').onclick = () => rotate(90);
+        $('#zoomIn').onclick = () => setZoom(state.zoom * 1.25);
+        $('#zoomOut').onclick = () => setZoom(state.zoom * 0.8);
+        $('#zoomFit').onclick = resetView;
+        $('#selectRegion').onclick = toggleSelect;
+        $('#clearAll').onclick = clearAll;
+
+        const w = $('#imageWrapper');
+        w.onmousedown = startPan;
+        document.onmousemove = doPan;
+        document.onmouseup = endPan;
+        $('#imageContainer').onwheel = e => { e.preventDefault(); setZoom(state.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); };
+
+        $$('.right-tab').forEach(t => t.onclick = () => switchTab(t.dataset.tab));
+        $$('.mode-btn').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+        $$('input[name="ocrScope"]').forEach(r => r.onchange = () => state.ocrScope = r.value);
+        $('#outputFormat').onchange = e => state.outputFormat = e.target.value;
+
+        $('#copyResult').onclick = copyResult;
+        $('#saveResult').onclick = saveManual;
+        $('#clearResult').onclick = () => { state.lastResult = ''; $('#resultContent').innerHTML = '<span style="color:var(--text-secondary)">識別結果將顯示於此...</span>'; };
+        $('#startOCR').onclick = startOCR;
+
+        $('#addToQueue').onclick = addToQueue;
+        $('#clearQueue').onclick = () => { if (state.queue.length && confirm('清空清單?')) { state.queue = []; renderQueue(); } };
+        $('#processQueue').onclick = processAll;
+        $('#clearHistory').onclick = clearHistory;
+
+        $('#settingsBtn').onclick = () => $('#settingsModal').classList.add('visible');
+        $('#closeSettings').onclick = () => $('#settingsModal').classList.remove('visible');
+        $('#saveSettings').onclick = saveSettings;
+        $('#resetSettings').onclick = () => {
+            state.settings = { apiEndpoint: 'http://localhost:1234/v1/chat/completions', model: 'qwen3-vl-8b-instruct', temperature: 0.1, maxTokens: 4096, maxResolution: 2048 };
+            applySettings(); toast('已重設', 'success');
         };
+        $('#temperature').oninput = e => $('#tempValue').textContent = e.target.value;
+        $('#maxTokens').oninput = e => $('#maxTokensValue').textContent = e.target.value;
+        $('#selectOutputFolder').onclick = selectFolder;
+        $('#headerModelSelect').onchange = e => { state.settings.model = e.target.value; localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings)); };
+        $('#headerRefreshModels').onclick = refreshModels;
 
-        // ==================== DOM Elements ====================
-        const $ = (sel) => document.querySelector(sel);
-        const $$ = (sel) => document.querySelectorAll(sel);
+        $('#closePdfPage').onclick = $('#cancelPdfPage').onclick = () => $('#pdfPageModal').classList.remove('visible');
+        $('#confirmPdfPages').onclick = confirmPdf;
+        $('#pdfPageInput').oninput = validatePages;
 
-        const elements = {
-            dropZone: $('#dropZone'),
-            imageCanvas: $('#imageCanvas'),
-            imageContainer: $('#imageContainer'),
-            selectionBox: $('#selectionBox'),
-            thumbnailsBar: $('#thumbnailsBar'),
-            resultContent: $('#resultContent'),
-            fileInput: $('#fileInput'),
-            settingsModal: $('#settingsModal'),
-            historyModal: $('#historyModal'),
-            cameraModal: $('#cameraModal'),
-            urlModal: $('#urlModal'),
-            pdfPageModal: $('#pdfPageModal'),
-            imageLoading: $('#imageLoading'),
-            resultLoading: $('#resultLoading'),
-            zoomIndicator: $('#zoomIndicator'),
-            toastContainer: $('#toastContainer'),
-            headerModelSelect: $('#headerModelSelect'),
-            pageRangeGrid: $('#pageRangeGrid')
+        $('#closeCamera').onclick = $('#cancelCamera').onclick = closeCamera;
+        $('#capturePhoto').onclick = capture;
+        $('#themeToggle').onclick = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
+
+        document.onkeydown = e => {
+            if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); startOCR(); }
+            if (e.key === 'Escape') $$('.modal-overlay').forEach(m => m.classList.remove('visible'));
         };
+    }
 
-        // ==================== Initialization ====================
-        document.addEventListener('DOMContentLoaded', init);
-
-        async function init() {
-            loadSettings();
-            loadHistory();
-            setupEventListeners();
-            checkConnection();
-            setupPWA();
-
-            // Auto-load model list on startup
-            await refreshHeaderModelList();
-
-            // Check connection periodically
-            setInterval(checkConnection, 30000);
+    async function processFiles(files) {
+        $('#imageLoading').classList.add('visible');
+        for (const f of files) {
+            if (f.type === 'application/pdf') await showPdfModal(f);
+            else if (f.type.startsWith('image/')) await processImage(f);
         }
-
-        // ==================== Settings ====================
-        function loadSettings() {
-            const saved = localStorage.getItem('qwen-ocr-settings');
-            if (saved) {
-                Object.assign(state.settings, JSON.parse(saved));
-            }
-            applySettings();
-        }
-
-        function applySettings() {
-            $('#apiEndpoint').value = state.settings.apiEndpoint;
-            $('#customModel').value = state.settings.customModel || '';
-            $('#temperature').value = state.settings.temperature;
-            $('#tempValue').textContent = state.settings.temperature;
-            $('#maxTokens').value = state.settings.maxTokens;
-            $('#maxTokensValue').textContent = state.settings.maxTokens;
-            $('#maxResolution').value = state.settings.maxResolution;
-            $('#imageQuality').value = state.settings.imageQuality;
-            $('#qualityValue').textContent = Math.round(state.settings.imageQuality * 100) + '%';
-
-            // Sync header model selector
-            if (elements.headerModelSelect) {
-                elements.headerModelSelect.value = state.settings.model || 'qwen3-vl-8b-instruct';
-            }
-        }
-
-        function saveSettings() {
-            state.settings.apiEndpoint = $('#apiEndpoint').value;
-            state.settings.model = $('#modelSelect').value || state.settings.model;
-            state.settings.customModel = $('#customModel').value;
-            state.settings.temperature = parseFloat($('#temperature').value);
-            state.settings.maxTokens = parseInt($('#maxTokens').value);
-            state.settings.maxResolution = parseInt($('#maxResolution').value);
-            state.settings.imageQuality = parseFloat($('#imageQuality').value);
-
-            // Sync header model selector
-            elements.headerModelSelect.value = state.settings.model;
-
-            localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings));
-            showToast('設定已儲存', 'success');
-            elements.settingsModal.classList.remove('visible');
-        }
-
-        // ==================== Event Listeners ====================
-        function setupEventListeners() {
-            // File handling
-            elements.dropZone.addEventListener('click', () => elements.fileInput.click());
-            elements.dropZone.addEventListener('dragover', handleDragOver);
-            elements.dropZone.addEventListener('dragleave', handleDragLeave);
-            elements.dropZone.addEventListener('drop', handleDrop);
-            elements.fileInput.addEventListener('change', handleFileSelect);
-
-            // Paste
-            document.addEventListener('paste', handlePaste);
-
-            // Toolbar buttons
-            $('#openFile').addEventListener('click', () => elements.fileInput.click());
-            $('#pasteImage').addEventListener('click', () => showToast('請使用 Ctrl+V 貼上圖片', 'info'));
-            $('#cameraCapture').addEventListener('click', openCamera);
-            $('#loadUrl').addEventListener('click', () => elements.urlModal.classList.add('visible'));
-
-            $('#rotateLeft').addEventListener('click', () => rotateImage(-90));
-            $('#rotateRight').addEventListener('click', () => rotateImage(90));
-            $('#zoomIn').addEventListener('click', () => setZoom(state.zoom * 1.25));
-            $('#zoomOut').addEventListener('click', () => setZoom(state.zoom * 0.8));
-            $('#zoomFit').addEventListener('click', () => setZoom(1));
-
-            $('#selectRegion').addEventListener('click', toggleSelectionMode);
-            $('#clearSelection').addEventListener('click', clearSelection);
-            $('#clearAll').addEventListener('click', clearAll);
-
-            // Canvas interaction
-            elements.imageCanvas.addEventListener('mousedown', startSelection);
-            elements.imageCanvas.addEventListener('mousemove', updateSelection);
-            elements.imageCanvas.addEventListener('mouseup', endSelection);
-
-            // Mode buttons
-            $$('.mode-btn').forEach(btn => {
-                btn.addEventListener('click', () => setMode(btn.dataset.mode));
-            });
-
-            // Result tabs
-            $$('.result-tab').forEach(tab => {
-                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-            });
-
-            // Result actions
-            $('#copyResult').addEventListener('click', copyResult);
-            $('#exportTxt').addEventListener('click', () => exportResult('txt'));
-            $('#exportMd').addEventListener('click', () => exportResult('md'));
-            $('#exportJson').addEventListener('click', () => exportResult('json'));
-            $('#exportCsv').addEventListener('click', () => exportResult('csv'));
-            $('#clearResult').addEventListener('click', clearResult);
-
-            // Settings
-            $('#settingsBtn').addEventListener('click', () => {
-                elements.settingsModal.classList.add('visible');
-                refreshModelList();
-            });
-            $('#closeSettings').addEventListener('click', () => elements.settingsModal.classList.remove('visible'));
-            $('#saveSettings').addEventListener('click', saveSettings);
-            $('#resetSettings').addEventListener('click', resetSettings);
-            $('#refreshModels').addEventListener('click', refreshModelList);
-
-            $('#temperature').addEventListener('input', (e) => $('#tempValue').textContent = e.target.value);
-            $('#maxTokens').addEventListener('input', (e) => $('#maxTokensValue').textContent = e.target.value);
-            $('#imageQuality').addEventListener('input', (e) => $('#qualityValue').textContent = Math.round(e.target.value * 100) + '%');
-
-            // History
-            $('#historyBtn').addEventListener('click', () => {
-                renderHistoryList();
-                elements.historyModal.classList.add('visible');
-            });
-            $('#closeHistory').addEventListener('click', () => elements.historyModal.classList.remove('visible'));
-            $('#clearHistory').addEventListener('click', clearHistoryData);
-
-            // Camera
-            $('#closeCamera').addEventListener('click', closeCamera);
-            $('#cancelCamera').addEventListener('click', closeCamera);
-            $('#capturePhoto').addEventListener('click', capturePhoto);
-
-            // URL
-            $('#closeUrl').addEventListener('click', () => elements.urlModal.classList.remove('visible'));
-            $('#cancelUrl').addEventListener('click', () => elements.urlModal.classList.remove('visible'));
-            $('#loadImageUrl').addEventListener('click', loadFromUrl);
-
-            // Theme
-            $('#themeToggle').addEventListener('click', toggleTheme);
-
-            // Start OCR
-            $('#startOCR').addEventListener('click', startOCR);
-
-            // Header Model Selector
-            elements.headerModelSelect.addEventListener('change', (e) => {
-                state.settings.model = e.target.value;
-                localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings));
-                showToast(`已切換模型: ${e.target.value}`, 'success');
-            });
-            $('#headerRefreshModels').addEventListener('click', refreshHeaderModelList);
-
-            // PDF Page Range Modal
-            $('#closePdfPage').addEventListener('click', closePdfPageModal);
-            $('#cancelPdfPage').addEventListener('click', closePdfPageModal);
-            $('#confirmPdfPages').addEventListener('click', confirmPdfPages);
-            $('#applyPageRange').addEventListener('click', applyPageRange);
-            $('#selectAllPages').addEventListener('click', () => selectPdfPages('all'));
-            $('#selectNonePages').addEventListener('click', () => selectPdfPages('none'));
-            $('#selectOddPages').addEventListener('click', () => selectPdfPages('odd'));
-            $('#selectEvenPages').addEventListener('click', () => selectPdfPages('even'));
-            $('#selectFirst10').addEventListener('click', () => selectPdfPages('first10'));
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', handleKeyboard);
-        }
-
-        // ==================== File Handling ====================
-        function handleDragOver(e) {
-            e.preventDefault();
-            elements.dropZone.classList.add('active');
-        }
-
-        function handleDragLeave(e) {
-            e.preventDefault();
-            elements.dropZone.classList.remove('active');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            elements.dropZone.classList.remove('active');
-            const files = Array.from(e.dataTransfer.files);
-            processFiles(files);
-        }
-
-        function handleFileSelect(e) {
-            const files = Array.from(e.target.files);
-            processFiles(files);
-            e.target.value = '';
-        }
-
-        function handlePaste(e) {
-            const items = Array.from(e.clipboardData.items);
-            for (const item of items) {
-                if (item.type.startsWith('image/')) {
-                    const file = item.getAsFile();
-                    processFiles([file]);
-                    break;
-                }
-            }
-        }
-
-        async function processFiles(files) {
-            elements.imageLoading.classList.add('visible');
-
-            for (const file of files) {
-                if (file.type === 'application/pdf') {
-                    await processPDF(file);
-                } else if (file.type.startsWith('image/')) {
-                    await processImage(file);
-                }
-            }
-
-            elements.imageLoading.classList.remove('visible');
-
-            if (state.images.length > 0 && state.currentIndex === -1) {
-                selectImage(0);
-            }
-        }
-
-        async function processImage(file, pageNum = null) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    const img = new Image();
-                    img.onload = async () => {
-                        const processed = await preprocessImage(img);
-                        const id = Date.now() + Math.random();
-                        const thumbnail = createThumbnail(processed);
-
-                        state.images.push({
-                            id,
-                            canvas: processed,
-                            originalFile: file,
-                            rotation: 0,
-                            thumbnail,
-                            pageNum
-                        });
-
-                        renderThumbnails();
-                        elements.dropZone.classList.add('hidden');
-                        resolve();
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        async function processPDF(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            const numPages = pdf.numPages;
-
-            // Store PDF info for later processing
-            state.pendingPdf = { file, pdf, arrayBuffer };
-            state.pdfNumPages = numPages;
-            state.selectedPdfPages = new Set();
-
-            // Update modal info
-            $('#pdfFileName').textContent = file.name;
-            $('#pdfTotalPages').textContent = numPages;
-            $('#pdfStartPage').value = 1;
-            $('#pdfStartPage').max = numPages;
-            $('#pdfEndPage').value = numPages;
-            $('#pdfEndPage').max = numPages;
-
-            // Generate page selection grid
-            renderPdfPageGrid(numPages);
-
-            // Select all pages by default
-            selectPdfPages('all');
-
-            // Show modal
-            elements.imageLoading.classList.remove('visible');
-            elements.pdfPageModal.classList.add('visible');
-        }
-
-        function renderPdfPageGrid(numPages) {
-            const grid = elements.pageRangeGrid;
-            grid.innerHTML = '';
-
-            for (let i = 1; i <= numPages; i++) {
-                const pageDiv = document.createElement('div');
-                pageDiv.className = 'page-checkbox';
-                pageDiv.textContent = i;
-                pageDiv.dataset.page = i;
-
-                pageDiv.addEventListener('click', () => {
-                    pageDiv.classList.toggle('selected');
-                    if (pageDiv.classList.contains('selected')) {
-                        state.selectedPdfPages.add(i);
-                    } else {
-                        state.selectedPdfPages.delete(i);
-                    }
-                    updateSelectedPageCount();
-                });
-
-                grid.appendChild(pageDiv);
-            }
-        }
-
-        function selectPdfPages(mode) {
-            const pageCheckboxes = $$('.page-checkbox');
-            state.selectedPdfPages.clear();
-
-            pageCheckboxes.forEach((checkbox, index) => {
-                const pageNum = index + 1;
-                let shouldSelect = false;
-
-                switch (mode) {
-                    case 'all':
-                        shouldSelect = true;
-                        break;
-                    case 'none':
-                        shouldSelect = false;
-                        break;
-                    case 'odd':
-                        shouldSelect = pageNum % 2 === 1;
-                        break;
-                    case 'even':
-                        shouldSelect = pageNum % 2 === 0;
-                        break;
-                    case 'first10':
-                        shouldSelect = pageNum <= 10;
-                        break;
-                }
-
-                checkbox.classList.toggle('selected', shouldSelect);
-                if (shouldSelect) {
-                    state.selectedPdfPages.add(pageNum);
-                }
-            });
-
-            updateSelectedPageCount();
-        }
-
-        function applyPageRange() {
-            const start = parseInt($('#pdfStartPage').value) || 1;
-            const end = parseInt($('#pdfEndPage').value) || state.pdfNumPages;
-
-            const pageCheckboxes = $$('.page-checkbox');
-            state.selectedPdfPages.clear();
-
-            pageCheckboxes.forEach((checkbox, index) => {
-                const pageNum = index + 1;
-                const shouldSelect = pageNum >= start && pageNum <= end;
-
-                checkbox.classList.toggle('selected', shouldSelect);
-                if (shouldSelect) {
-                    state.selectedPdfPages.add(pageNum);
-                }
-            });
-
-            updateSelectedPageCount();
-        }
-
-        function updateSelectedPageCount() {
-            $('#selectedPageCount').textContent = state.selectedPdfPages.size;
-        }
-
-        function closePdfPageModal() {
-            elements.pdfPageModal.classList.remove('visible');
-            state.pendingPdf = null;
-            state.pdfNumPages = 0;
-            state.selectedPdfPages.clear();
-        }
-
-        async function confirmPdfPages() {
-            if (state.selectedPdfPages.size === 0) {
-                showToast('請至少選擇一個頁面', 'error');
-                return;
-            }
-
-            elements.pdfPageModal.classList.remove('visible');
-            elements.imageLoading.classList.add('visible');
-
-            const { file, pdf } = state.pendingPdf;
-            const numPages = state.pdfNumPages;
-            const selectedPages = Array.from(state.selectedPdfPages).sort((a, b) => a - b);
-
-            try {
-                for (const pageNum of selectedPages) {
-                    const page = await pdf.getPage(pageNum);
-                    const scale = 2;
-                    const viewport = page.getViewport({ scale });
-
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-
-                    await page.render({
-                        canvasContext: ctx,
-                        viewport: viewport
-                    }).promise;
-
-                    // Convert to image and process
-                    const img = new Image();
-                    await new Promise((resolve) => {
-                        img.onload = resolve;
-                        img.src = canvas.toDataURL('image/png');
-                    });
-
-                    const processed = await preprocessImage(img);
-                    const id = Date.now() + Math.random();
-                    const thumbnail = createThumbnail(processed);
-
+        $('#imageLoading').classList.remove('visible');
+        if (state.images.length && state.currentIndex === -1) selectImg(0);
+    }
+
+    async function processImage(file, pageNum = null, totalPages = null) {
+        return new Promise(r => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = preprocess(img);
                     state.images.push({
-                        id,
-                        canvas: processed,
-                        originalFile: file,
-                        rotation: 0,
-                        thumbnail,
-                        pageNum: pageNum,
-                        totalPages: numPages
+                        id: Date.now() + Math.random(), canvas: c, fileName: file.name,
+                        rotation: 0, thumbnail: thumb(c), pageNum, totalPages
                     });
-                }
+                    renderThumbs();
+                    $('#dropZone').classList.add('hidden');
+                    r();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
-                renderThumbnails();
-                elements.dropZone.classList.add('hidden');
+    function preprocess(img) {
+        const c = document.createElement('canvas'), ctx = c.getContext('2d');
+        let w = img.width, h = img.height;
+        const m = state.settings.maxResolution;
+        if (m > 0 && (w > m || h > m)) { const r = Math.min(m / w, m / h); w *= r; h *= r; }
+        c.width = w; c.height = h;
+        ctx.drawImage(img, 0, 0, w, h);
+        return c;
+    }
 
-                if (state.images.length > 0 && state.currentIndex === -1) {
-                    selectImage(0);
-                }
+    function thumb(c) {
+        const t = document.createElement('canvas'), ctx = t.getContext('2d');
+        const r = Math.min(40 / c.width, 40 / c.height);
+        t.width = c.width * r; t.height = c.height * r;
+        ctx.drawImage(c, 0, 0, t.width, t.height);
+        return t.toDataURL('image/jpeg', 0.6);
+    }
 
-                showToast(`已載入 ${selectedPages.length} 頁`, 'success');
+    async function showPdfModal(file) {
+        const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+        state.pendingPdf = { file, pdf }; state.pdfNumPages = pdf.numPages;
+        $('#pdfFileName').textContent = file.name;
+        $('#pdfTotalPages').textContent = pdf.numPages;
+        $('#pdfPageInput').value = `1-${pdf.numPages}`;
+        validatePages();
+        $('#imageLoading').classList.remove('visible');
+        $('#pdfPageModal').classList.add('visible');
+    }
 
-            } catch (error) {
-                showToast('PDF 處理失敗: ' + error.message, 'error');
-            } finally {
-                elements.imageLoading.classList.remove('visible');
-                state.pendingPdf = null;
-                state.pdfNumPages = 0;
-                state.selectedPdfPages.clear();
-            }
-        }
-
-        async function preprocessImage(img) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            let width = img.width;
-            let height = img.height;
-
-            const maxRes = state.settings.maxResolution;
-            if (maxRes > 0 && (width > maxRes || height > maxRes)) {
-                const ratio = Math.min(maxRes / width, maxRes / height);
-                width = Math.round(width * ratio);
-                height = Math.round(height * ratio);
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Update image info
-            $('#imageInfo').textContent = `圖片: ${width}×${height}`;
-
-            return canvas;
-        }
-
-        function createThumbnail(canvas) {
-            const thumb = document.createElement('canvas');
-            const ctx = thumb.getContext('2d');
-            const size = 48;
-            const ratio = Math.min(size / canvas.width, size / canvas.height);
-
-            thumb.width = canvas.width * ratio;
-            thumb.height = canvas.height * ratio;
-            ctx.drawImage(canvas, 0, 0, thumb.width, thumb.height);
-
-            return thumb.toDataURL('image/jpeg', 0.7);
-        }
-
-        // ==================== Image Display ====================
-        function selectImage(index) {
-            if (index < 0 || index >= state.images.length) return;
-
-            state.currentIndex = index;
-            state.zoom = 1;
-            state.rotation = state.images[index].rotation;
-
-            renderCurrentImage();
-            updateThumbnailSelection();
-        }
-
-        function renderCurrentImage() {
-            if (state.currentIndex < 0) return;
-
-            const imgData = state.images[state.currentIndex];
-            const canvas = elements.imageCanvas;
-            const ctx = canvas.getContext('2d');
-            const srcCanvas = imgData.canvas;
-
-            // Apply rotation
-            const rotation = state.rotation;
-            const isRotated = rotation === 90 || rotation === 270;
-
-            if (isRotated) {
-                canvas.width = srcCanvas.height;
-                canvas.height = srcCanvas.width;
+    function parseRange(input, max) {
+        const pages = new Set(), errors = [];
+        input.split(',').map(s => s.trim()).filter(s => s).forEach(p => {
+            if (p.includes('-')) {
+                const [a, b] = p.split('-').map(s => parseInt(s.trim()));
+                if (isNaN(a) || isNaN(b)) errors.push(`無效: ${p}`);
+                else if (a < 1 || b > max) errors.push(`超出範圍: ${p}`);
+                else if (a > b) errors.push(`起始>結束: ${p}`);
+                else for (let i = a; i <= b; i++) pages.add(i);
             } else {
-                canvas.width = srcCanvas.width;
-                canvas.height = srcCanvas.height;
+                const n = parseInt(p);
+                if (isNaN(n)) errors.push(`無效: ${p}`);
+                else if (n < 1 || n > max) errors.push(`超出: ${p}`);
+                else pages.add(n);
             }
+        });
+        return { pages: [...pages].sort((a, b) => a - b), errors };
+    }
 
-            ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate((rotation * Math.PI) / 180);
-            ctx.drawImage(srcCanvas, -srcCanvas.width / 2, -srcCanvas.height / 2);
-            ctx.restore();
+    function validatePages() {
+        const { pages, errors } = parseRange($('#pdfPageInput').value, state.pdfNumPages);
+        if (errors.length) {
+            $('#pdfPageError').textContent = errors.join('; ');
+            $('#pdfPageError').style.display = 'block';
+            $('#pdfPagePreview').textContent = '';
+        } else {
+            $('#pdfPageError').style.display = 'none';
+            $('#pdfPagePreview').textContent = pages.length ? `將載入 ${pages.length} 頁` : '';
+        }
+    }
 
-            // Apply zoom
-            canvas.style.transform = `scale(${state.zoom})`;
-            elements.zoomIndicator.textContent = Math.round(state.zoom * 100) + '%';
-            elements.zoomIndicator.style.display = 'block';
+    async function confirmPdf() {
+        const { pages, errors } = parseRange($('#pdfPageInput').value, state.pdfNumPages);
+        if (errors.length) { toast('頁面範圍有誤', 'error'); return; }
+        if (!pages.length) { toast('請選擇頁面', 'error'); return; }
 
-            // Update info
+        $('#pdfPageModal').classList.remove('visible');
+        $('#imageLoading').classList.add('visible');
+
+        const { file, pdf } = state.pendingPdf;
+        try {
+            for (const p of pages) {
+                const page = await pdf.getPage(p);
+                const vp = page.getViewport({ scale: 2 });
+                const c = document.createElement('canvas');
+                c.width = vp.width; c.height = vp.height;
+                await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+
+                const img = new Image();
+                await new Promise(r => { img.onload = r; img.src = c.toDataURL('image/png'); });
+                const proc = preprocess(img);
+                state.images.push({
+                    id: Date.now() + Math.random(), canvas: proc, fileName: file.name,
+                    rotation: 0, thumbnail: thumb(proc), pageNum: p, totalPages: state.pdfNumPages
+                });
+            }
+            renderThumbs();
+            $('#dropZone').classList.add('hidden');
+            if (state.currentIndex === -1) selectImg(0);
+            toast(`已載入 ${pages.length} 頁`, 'success');
+        } catch (e) { toast('PDF 錯誤: ' + e.message, 'error'); }
+        finally { $('#imageLoading').classList.remove('visible'); state.pendingPdf = null; }
+    }
+
+    function selectImg(i) {
+        if (i < 0 || i >= state.images.length) return;
+        state.currentIndex = i;
+        state.zoom = 1; state.panX = 0; state.panY = 0;
+        state.rotation = state.images[i].rotation;
+        renderImg();
+        $$('.thumbnail').forEach((t, j) => t.classList.toggle('active', j === i));
+    }
+
+    function renderImg() {
+        if (state.currentIndex < 0) return;
+        const d = state.images[state.currentIndex];
+        const c = $('#imageCanvas'), ctx = c.getContext('2d'), src = d.canvas;
+        const rot = state.rotation, rotated = rot === 90 || rot === 270;
+        c.width = rotated ? src.height : src.width;
+        c.height = rotated ? src.width : src.height;
+        ctx.save();
+        ctx.translate(c.width / 2, c.height / 2);
+        ctx.rotate(rot * Math.PI / 180);
+        ctx.drawImage(src, -src.width / 2, -src.height / 2);
+        ctx.restore();
+
+        const w = $('#imageWrapper');
+        w.style.display = 'block';
+        w.style.transform = `translate(calc(-50% + ${state.panX}px), calc(-50% + ${state.panY}px)) scale(${state.zoom})`;
+        $('#zoomIndicator').textContent = Math.round(state.zoom * 100) + '%';
+        $('#zoomIndicator').style.display = 'block';
+        $('#imageInfo').textContent = `${c.width}×${c.height}${d.pageNum ? ` (${d.pageNum}/${d.totalPages})` : ''}`;
+    }
+
+    function renderThumbs() {
+        const bar = $('#thumbnailsBar'); bar.innerHTML = '';
+        state.images.forEach((img, i) => {
+            const wrap = document.createElement('div'); wrap.className = 'thumbnail-wrapper';
+            const t = document.createElement('img');
+            t.className = 'thumbnail' + (i === state.currentIndex ? ' active' : '');
+            t.src = img.thumbnail;
+            t.onclick = () => selectImg(i);
+            const x = document.createElement('button');
+            x.className = 'thumbnail-close'; x.textContent = '×';
+            x.onclick = e => { e.stopPropagation(); removeImg(i); };
+            wrap.appendChild(t); wrap.appendChild(x);
+            if (img.pageNum) {
+                const p = document.createElement('div');
+                p.className = 'page-indicator'; p.textContent = img.pageNum;
+                wrap.appendChild(p);
+            }
+            bar.appendChild(wrap);
+        });
+    }
+
+    function removeImg(i) {
+        state.images.splice(i, 1);
+        if (!state.images.length) {
+            state.currentIndex = -1;
+            $('#dropZone').classList.remove('hidden');
+            $('#imageWrapper').style.display = 'none';
+            $('#zoomIndicator').style.display = 'none';
+        } else if (state.currentIndex >= state.images.length) selectImg(state.images.length - 1);
+        else if (state.currentIndex === i) selectImg(Math.min(i, state.images.length - 1));
+        renderThumbs();
+    }
+
+    function rotate(deg) { if (state.currentIndex < 0) return; state.rotation = (state.rotation + deg + 360) % 360; state.images[state.currentIndex].rotation = state.rotation; renderImg(); }
+    function setZoom(z) { state.zoom = Math.max(0.25, Math.min(5, z)); renderImg(); }
+    function resetView() { state.zoom = 1; state.panX = 0; state.panY = 0; renderImg(); }
+
+    function startPan(e) { if (state.isSelecting) return; state.isPanning = true; state.panStart = { x: e.clientX - state.panX, y: e.clientY - state.panY }; $('#imageWrapper').classList.add('dragging'); }
+    function doPan(e) { if (!state.isPanning) return; state.panX = e.clientX - state.panStart.x; state.panY = e.clientY - state.panStart.y; $('#imageWrapper').style.transform = `translate(calc(-50% + ${state.panX}px), calc(-50% + ${state.panY}px)) scale(${state.zoom})`; }
+    function endPan() { state.isPanning = false; $('#imageWrapper').classList.remove('dragging'); }
+
+    function toggleSelect() { state.isSelecting = !state.isSelecting; $('#imageCanvas').style.cursor = state.isSelecting ? 'crosshair' : 'grab'; $('#selectRegion').classList.toggle('active', state.isSelecting); }
+
+    function addToQueue() {
+        if (!state.images.length) { toast('請先上傳檔案', 'error'); return; }
+        const groups = {};
+        state.images.forEach((img, i) => {
+            const k = img.fileName;
+            if (!groups[k]) groups[k] = { fileName: k, pages: [], totalPages: img.totalPages || 1 };
+            groups[k].pages.push({ index: i, pageNum: img.pageNum || 1 });
+        });
+        Object.values(groups).forEach(g => {
+            if (!state.queue.find(q => q.fileName === g.fileName)) {
+                state.queue.push({
+                    id: Date.now() + Math.random(), fileName: g.fileName,
+                    pageRange: g.pages.map(p => p.pageNum).join(','),
+                    pages: g.pages, totalPages: g.totalPages
+                });
+            }
+        });
+        renderQueue();
+        toast('已加入清單', 'success');
+    }
+
+    function renderQueue() {
+        const c = $('#queueContainer');
+        if (!state.queue.length) {
+            c.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:20px;font-size:11px;">尚無待辨識項目</p>';
+            $('#queueSummary').textContent = '總計: 0 個檔案, 0 頁';
+            return;
+        }
+        let total = 0;
+        c.innerHTML = state.queue.map((q, i) => {
+            const { pages, errors } = parseRange(q.pageRange, q.totalPages);
+            total += pages.length;
+            const err = errors.length ? `<div class="queue-page-error">${errors[0]}</div>` : '';
+            return `<div class="queue-item${state.currentQueueIndex === i ? ' active' : ''}" data-i="${i}">
+                <div class="queue-item-header" onclick="selectQueue(${i})">
+                    <span class="queue-item-name">${i + 1}. 📄 ${q.fileName}</span>
+                    <div class="queue-item-actions">
+                        <button onclick="event.stopPropagation();moveQueue(${i},-1)">▲</button>
+                        <button onclick="event.stopPropagation();moveQueue(${i},1)">▼</button>
+                        <button onclick="event.stopPropagation();removeQueue(${i})">✕</button>
+                    </div>
+                </div>
+                <div class="queue-item-body">
+                    <label style="font-size:9px;color:var(--text-secondary)">頁面:</label>
+                    <input type="text" class="queue-page-input" value="${q.pageRange}" onchange="updateQueue(${i},this.value)" placeholder="1,3,5-10">
+                    <div class="queue-page-info">共 ${pages.length} 頁 / 總 ${q.totalPages} 頁</div>
+                    ${err}
+                </div>
+            </div>`;
+        }).join('');
+        $('#queueSummary').textContent = `總計: ${state.queue.length} 個檔案, ${total} 頁`;
+    }
+
+    window.selectQueue = i => { state.currentQueueIndex = i; renderQueue(); const img = state.images.find(m => m.fileName === state.queue[i].fileName); if (img) selectImg(state.images.indexOf(img)); };
+    window.moveQueue = (i, d) => { const n = i + d; if (n < 0 || n >= state.queue.length) return; [state.queue[i], state.queue[n]] = [state.queue[n], state.queue[i]]; if (state.currentQueueIndex === i) state.currentQueueIndex = n; else if (state.currentQueueIndex === n) state.currentQueueIndex = i; renderQueue(); };
+    window.removeQueue = i => { state.queue.splice(i, 1); if (state.currentQueueIndex >= state.queue.length) state.currentQueueIndex = state.queue.length - 1; renderQueue(); };
+    window.updateQueue = (i, v) => { const { errors } = parseRange(v, state.queue[i].totalPages); if (errors.length) toast('範圍有誤: ' + errors[0], 'error'); else state.queue[i].pageRange = v; renderQueue(); };
+
+    async function startOCR() {
+        if (!state.images.length) { toast('請先上傳圖片', 'error'); return; }
+        if (state.ocrScope === 'current') await ocrCurrent();
+        else if (state.ocrScope === 'task') await ocrTask();
+        else await processAll();
+    }
+
+    async function ocrCurrent() {
+        if (state.currentIndex < 0) return;
+        $('#resultLoading').classList.add('visible');
+        $('#loadingText').textContent = '識別中...';
+        const t0 = performance.now();
+        try {
+            const r = await callAPI($('#imageCanvas'));
             const img = state.images[state.currentIndex];
-            $('#imageInfo').textContent = `圖片: ${canvas.width}×${canvas.height}${img.pageNum ? ` (頁 ${img.pageNum}/${img.totalPages})` : ''}`;
-        }
+            state.lastResult = r;
+            let html = '';
+            if (img.pageNum) html += `<div class="result-page-header">--- 第 ${img.pageNum} 頁 ---</div>`;
+            html += r;
+            $('#resultContent').innerHTML = html;
+            $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
+            saveHistory(r, img.fileName);
+        } catch (e) { toast('識別失敗: ' + e.message, 'error'); }
+        finally { $('#resultLoading').classList.remove('visible'); }
+    }
 
-        function renderThumbnails() {
-            elements.thumbnailsBar.innerHTML = '';
+    async function ocrTask() {
+        const cur = state.images[state.currentIndex];
+        if (!cur) return;
+        const imgs = state.images.filter(m => m.fileName === cur.fileName);
+        await processSet(imgs, cur.fileName);
+    }
 
-            state.images.forEach((img, index) => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'thumbnail-wrapper';
+    async function processAll() {
+        if (!state.queue.length) { toast('清單為空', 'error'); return; }
+        $('#resultLoading').classList.add('visible');
+        const t0 = performance.now(), all = {};
+        try {
+            for (let qi = 0; qi < state.queue.length; qi++) {
+                const q = state.queue[qi];
+                const { pages } = parseRange(q.pageRange, q.totalPages);
+                const imgs = state.images.filter(m => m.fileName === q.fileName && pages.includes(m.pageNum || 1));
+                $('#loadingText').textContent = `處理 ${qi + 1}/${state.queue.length}: ${q.fileName}`;
+                $('#progressFill').style.width = `${((qi + 1) / state.queue.length) * 100}%`;
 
-                const thumb = document.createElement('img');
-                thumb.className = 'thumbnail' + (index === state.currentIndex ? ' active' : '');
-                thumb.src = img.thumbnail;
-                thumb.addEventListener('click', () => selectImage(index));
-
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'thumbnail-close';
-                closeBtn.textContent = '×';
-                closeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    removeImage(index);
-                });
-
-                wrapper.appendChild(thumb);
-                wrapper.appendChild(closeBtn);
-
-                if (img.pageNum) {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'page-indicator';
-                    indicator.textContent = img.pageNum;
-                    wrapper.appendChild(indicator);
+                const results = [];
+                for (const img of imgs) {
+                    selectImg(state.images.indexOf(img));
+                    await delay(100);
+                    const r = await callAPI($('#imageCanvas'));
+                    results.push({ pageNum: img.pageNum || 1, text: r });
                 }
-
-                elements.thumbnailsBar.appendChild(wrapper);
-            });
-        }
-
-        function updateThumbnailSelection() {
-            $$('.thumbnail').forEach((thumb, index) => {
-                thumb.classList.toggle('active', index === state.currentIndex);
-            });
-        }
-
-        function removeImage(index) {
-            state.images.splice(index, 1);
-
-            if (state.images.length === 0) {
-                state.currentIndex = -1;
-                elements.dropZone.classList.remove('hidden');
-                elements.imageCanvas.getContext('2d').clearRect(0, 0, elements.imageCanvas.width, elements.imageCanvas.height);
-                elements.zoomIndicator.style.display = 'none';
-            } else if (state.currentIndex >= state.images.length) {
-                selectImage(state.images.length - 1);
-            } else if (state.currentIndex === index) {
-                selectImage(Math.min(index, state.images.length - 1));
+                all[q.fileName] = results;
+                await autoSave(q.fileName, results);
             }
+            state.results = all;
+            displayAll(all);
+            $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
+            toast('全部識別完成', 'success');
+        } catch (e) { toast('識別失敗: ' + e.message, 'error'); }
+        finally { $('#resultLoading').classList.remove('visible'); $('#progressFill').style.width = '0%'; }
+    }
 
-            renderThumbnails();
-        }
-
-        // ==================== Image Manipulation ====================
-        function rotateImage(degrees) {
-            if (state.currentIndex < 0) return;
-
-            state.rotation = (state.rotation + degrees + 360) % 360;
-            state.images[state.currentIndex].rotation = state.rotation;
-            renderCurrentImage();
-        }
-
-        function setZoom(zoom) {
-            state.zoom = Math.max(0.25, Math.min(4, zoom));
-            if (state.currentIndex >= 0) {
-                elements.imageCanvas.style.transform = `scale(${state.zoom})`;
-                elements.zoomIndicator.textContent = Math.round(state.zoom * 100) + '%';
+    async function processSet(imgs, fileName) {
+        $('#resultLoading').classList.add('visible');
+        const t0 = performance.now(), results = [];
+        try {
+            for (let i = 0; i < imgs.length; i++) {
+                selectImg(state.images.indexOf(imgs[i]));
+                await delay(100);
+                $('#loadingText').textContent = `識別 ${i + 1}/${imgs.length}...`;
+                $('#progressFill').style.width = `${((i + 1) / imgs.length) * 100}%`;
+                const r = await callAPI($('#imageCanvas'));
+                results.push({ pageNum: imgs[i].pageNum || (i + 1), text: r });
             }
-        }
+            state.results[fileName] = results;
+            displayTask(fileName, results);
+            await autoSave(fileName, results);
+            $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
+            toast('識別完成', 'success');
+        } catch (e) { toast('識別失敗: ' + e.message, 'error'); }
+        finally { $('#resultLoading').classList.remove('visible'); $('#progressFill').style.width = '0%'; }
+    }
 
-        // ==================== Region Selection ====================
-        function toggleSelectionMode() {
-            state.isSelecting = !state.isSelecting;
-            elements.imageCanvas.style.cursor = state.isSelecting ? 'crosshair' : 'default';
-            $('#selectRegion').classList.toggle('active', state.isSelecting);
-            if (!state.isSelecting) {
-                clearSelection();
-            }
-        }
-
-        function startSelection(e) {
-            if (!state.isSelecting || state.currentIndex < 0) return;
-
-            const rect = elements.imageCanvas.getBoundingClientRect();
-            state.selectionStart = {
-                x: (e.clientX - rect.left) / state.zoom,
-                y: (e.clientY - rect.top) / state.zoom
-            };
-
-            elements.selectionBox.style.display = 'block';
-        }
-
-        function updateSelection(e) {
-            if (!state.selectionStart) return;
-
-            const rect = elements.imageCanvas.getBoundingClientRect();
-            const canvasRect = elements.imageContainer.getBoundingClientRect();
-
-            const currentX = (e.clientX - rect.left) / state.zoom;
-            const currentY = (e.clientY - rect.top) / state.zoom;
-
-            const left = Math.min(state.selectionStart.x, currentX);
-            const top = Math.min(state.selectionStart.y, currentY);
-            const width = Math.abs(currentX - state.selectionStart.x);
-            const height = Math.abs(currentY - state.selectionStart.y);
-
-            // Position relative to container
-            const canvasOffsetX = rect.left - canvasRect.left;
-            const canvasOffsetY = rect.top - canvasRect.top;
-
-            elements.selectionBox.style.left = (canvasOffsetX + left * state.zoom) + 'px';
-            elements.selectionBox.style.top = (canvasOffsetY + top * state.zoom) + 'px';
-            elements.selectionBox.style.width = (width * state.zoom) + 'px';
-            elements.selectionBox.style.height = (height * state.zoom) + 'px';
-
-            state.selectionRect = { left, top, width, height };
-        }
-
-        function endSelection(e) {
-            if (!state.selectionStart) return;
-            updateSelection(e);
-            state.selectionStart = null;
-        }
-
-        function clearSelection() {
-            state.selectionRect = null;
-            state.selectionStart = null;
-            elements.selectionBox.style.display = 'none';
-        }
-
-        function getSelectedRegionCanvas() {
-            if (!state.selectionRect || state.currentIndex < 0) return null;
-
-            const { left, top, width, height } = state.selectionRect;
-            if (width < 10 || height < 10) return null;
-
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = width;
-            canvas.height = height;
-
-            ctx.drawImage(
-                elements.imageCanvas,
-                left, top, width, height,
-                0, 0, width, height
-            );
-
-            return canvas;
-        }
-
-        // ==================== OCR ====================
-        async function startOCR() {
-            if (state.currentIndex < 0) {
-                showToast('請先上傳圖片', 'error');
-                return;
-            }
-
-            elements.resultLoading.classList.add('visible');
-            $('#loadingText').textContent = '識別中...';
-
-            const startTime = performance.now();
-
-            try {
-                // Get image data
-                let canvas = state.selectionRect
-                    ? getSelectedRegionCanvas()
-                    : elements.imageCanvas;
-
-                if (!canvas) {
-                    canvas = elements.imageCanvas;
-                }
-
-                const imageData = canvas.toDataURL('image/jpeg', state.settings.imageQuality);
-                const base64Data = imageData.split(',')[1];
-
-                // Build prompt based on mode
-                const prompt = buildPrompt();
-
-                // Call API
-                const result = await callOCRAPI(base64Data, prompt);
-
-                const endTime = performance.now();
-                const duration = ((endTime - startTime) / 1000).toFixed(2);
-                $('#processTime').textContent = `處理時間: ${duration}s`;
-
-                // Display result
-                displayResult(result);
-
-                // Save to history
-                saveToHistory(result, imageData);
-
-            } catch (error) {
-                console.error('OCR Error:', error);
-                showToast('識別失敗: ' + error.message, 'error');
-            } finally {
-                elements.resultLoading.classList.remove('visible');
-            }
-        }
-
-        function buildPrompt() {
-            const prompts = {
-                text: '請識別並提取圖片中的所有文字內容，保持原始排版格式。只輸出識別到的文字，不要添加任何解釋。',
-                structured: '請識別圖片中的所有文字，並保留其結構格式（包括段落、縮排、列表等）。以 Markdown 格式輸出。',
-                table: '請識別圖片中的表格內容，並轉換為 Markdown 表格格式輸出。如果有多個表格，請分別輸出。',
-                handwriting: '請識別圖片中的手寫文字內容。盡可能準確地辨識每個字，如有不確定的字請用 [?] 標記。',
-                multilang: '請識別圖片中的所有文字，可能包含多種語言（如中文、英文、日文、韓文等）。請準確識別並保持原始語言。',
-                custom: $('#customPrompt').value || '請識別圖片中的文字內容。'
-            };
-
-            return prompts[state.currentMode] || prompts.text;
-        }
-
-        async function callOCRAPI(base64Image, prompt) {
-            const model = state.settings.customModel || state.settings.model || elements.headerModelSelect.value || 'qwen3-vl-8b-instruct';
-
-            const requestBody = {
-                model: model,
-                messages: [
-                    {
-                        role: 'user',
-                        content: [
-                            {
-                                type: 'image_url',
-                                image_url: {
-                                    url: `data:image/jpeg;base64,${base64Image}`
-                                }
-                            },
-                            {
-                                type: 'text',
-                                text: prompt
-                            }
-                        ]
-                    }
-                ],
+    async function callAPI(canvas) {
+        const b64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+        const prompts = {
+            text: '請識別圖片中所有文字，保持原始排版。只輸出文字。',
+            structured: '識別圖片文字並以 Markdown 格式輸出。',
+            table: '識別圖片中表格並轉為 Markdown 表格。',
+            handwriting: '識別手寫文字，不確定的用 [?] 標記。',
+            multilang: '識別圖片中所有語言的文字。',
+            custom: $('#customPrompt').value || '識別圖片中的文字。'
+        };
+        const res = await fetch(state.settings.apiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: state.settings.model,
+                messages: [{ role: 'user', content: [
+                    { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } },
+                    { type: 'text', text: prompts[state.currentMode] }
+                ]}],
                 temperature: state.settings.temperature,
-                max_tokens: state.settings.maxTokens,
-                stream: false
-            };
+                max_tokens: state.settings.maxTokens
+            })
+        });
+        if (!res.ok) throw new Error(`API 錯誤: ${res.status}`);
+        return (await res.json()).choices[0].message.content;
+    }
 
-            const response = await fetch(state.settings.apiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
+    function displayTask(name, results) {
+        let html = `<div class="result-file-header">📄 ${name}</div>`;
+        results.forEach(r => { html += `<div class="result-page-header">--- 第 ${r.pageNum} 頁 ---</div><div>${r.text}</div>`; });
+        $('#resultContent').innerHTML = html;
+        state.lastResult = results.map(r => `--- 第 ${r.pageNum} 頁 ---\n${r.text}`).join('\n\n');
+    }
+
+    function displayAll(all) {
+        let html = '', txt = '';
+        Object.entries(all).forEach(([name, results]) => {
+            html += `<div class="result-file-header">📄 ${name}</div>`;
+            txt += `\n${'='.repeat(40)}\n📄 ${name}\n${'='.repeat(40)}\n\n`;
+            results.forEach(r => {
+                html += `<div class="result-page-header">--- 第 ${r.pageNum} 頁 ---</div><div>${r.text}</div>`;
+                txt += `--- 第 ${r.pageNum} 頁 ---\n${r.text}\n\n`;
             });
+        });
+        $('#resultContent').innerHTML = html;
+        state.lastResult = txt;
+    }
 
-            if (!response.ok) {
-                throw new Error(`API 錯誤: ${response.status} ${response.statusText}`);
+    function timestamp() { const d = new Date(); return `${d.getDate().toString().padStart(2,'0')}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getFullYear()}_${d.getHours().toString().padStart(2,'0')}${d.getMinutes().toString().padStart(2,'0')}`; }
+
+    function formatOutput(results, fmt, name) {
+        const txt = results.map(r => `--- 第 ${r.pageNum} 頁 ---\n${r.text}`).join('\n\n');
+        if (fmt === 'txt') return txt;
+        if (fmt === 'md') return `# OCR: ${name}\n\n` + results.map(r => `## 第 ${r.pageNum} 頁\n\n${r.text}`).join('\n\n');
+        if (fmt === 'json') return JSON.stringify({ fileName: name, timestamp: new Date().toISOString(), pages: results }, null, 2);
+        return txt;
+    }
+
+    async function createDocx(results, name) {
+        const { Document, Paragraph, TextRun, HeadingLevel, Packer } = docx;
+        const children = [new Paragraph({ text: `OCR: ${name}`, heading: HeadingLevel.HEADING_1 })];
+        results.forEach(r => {
+            children.push(new Paragraph({ text: `第 ${r.pageNum} 頁`, heading: HeadingLevel.HEADING_2 }));
+            r.text.split('\n').forEach(l => children.push(new Paragraph({ children: [new TextRun(l)] })));
+        });
+        return await Packer.toBlob(new Document({ sections: [{ children }] }));
+    }
+
+    function createXlsx(results) {
+        const data = [['頁碼', '內容']];
+        results.forEach(r => data.push([r.pageNum, r.text]));
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'OCR');
+        return new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    }
+
+    async function autoSave(fileName, results) {
+        const fmt = state.outputFormat, ts = timestamp();
+        const base = fileName.replace(/\.[^/.]+$/, '');
+        const outName = `OCR_${base}_${ts}.${fmt}`;
+        try {
+            if (!state.outputDirHandle) {
+                state.outputDirHandle = await window.showDirectoryPicker({ startIn: 'desktop', mode: 'readwrite' });
             }
-
-            const data = await response.json();
-
-            // Update token usage
-            if (data.usage) {
-                $('#tokenUsage').textContent = `Token: ${data.usage.total_tokens || 'N/A'}`;
-            }
-
-            return data.choices[0].message.content;
+            const fh = await state.outputDirHandle.getFileHandle(outName, { create: true });
+            const w = await fh.createWritable();
+            if (fmt === 'docx') await w.write(await createDocx(results, fileName));
+            else if (fmt === 'xlsx') await w.write(createXlsx(results));
+            else await w.write(formatOutput(results, fmt, fileName));
+            await w.close();
+            toast(`已儲存: ${outName}`, 'success');
+        } catch (e) {
+            if (e.name !== 'AbortError') download(fmt === 'docx' || fmt === 'xlsx' ? (fmt === 'docx' ? await createDocx(results, fileName) : createXlsx(results)) : formatOutput(results, fmt, fileName), outName);
         }
-
-        function displayResult(text) {
-            state.lastResult = text;
-            elements.resultContent.textContent = text;
-
-            // Update compare view
-            $('#compareOriginal').textContent = text;
-            $('#compareEdited').textContent = text;
-        }
-
-        // ==================== Result Actions ====================
-        function copyResult() {
-            const text = state.lastResult;
-            if (!text) {
-                showToast('沒有可複製的內容', 'error');
-                return;
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('已複製到剪貼簿', 'success');
-            }).catch(() => {
-                showToast('複製失敗', 'error');
-            });
-        }
-
-        function exportResult(format) {
-            const text = state.lastResult;
-            if (!text) {
-                showToast('沒有可匯出的內容', 'error');
-                return;
-            }
-
-            let content, filename, mimeType;
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-
-            switch (format) {
-                case 'txt':
-                    content = text;
-                    filename = `ocr-result-${timestamp}.txt`;
-                    mimeType = 'text/plain';
-                    break;
-                case 'md':
-                    content = `# OCR 識別結果\n\n${text}\n\n---\n*由 Qwen3-VL OCR 產生於 ${new Date().toLocaleString('zh-TW')}*`;
-                    filename = `ocr-result-${timestamp}.md`;
-                    mimeType = 'text/markdown';
-                    break;
-                case 'json':
-                    content = JSON.stringify({
-                        result: text,
-                        mode: state.currentMode,
-                        timestamp: new Date().toISOString(),
-                        settings: state.settings
-                    }, null, 2);
-                    filename = `ocr-result-${timestamp}.json`;
-                    mimeType = 'application/json';
-                    break;
-                case 'csv':
-                    // Simple CSV conversion - split by lines and tabs
-                    const lines = text.split('\n').map(line =>
-                        '"' + line.replace(/"/g, '""') + '"'
-                    );
-                    content = lines.join('\n');
-                    filename = `ocr-result-${timestamp}.csv`;
-                    mimeType = 'text/csv';
-                    break;
-            }
-
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-
-            showToast(`已匯出 ${format.toUpperCase()} 檔案`, 'success');
-        }
-
-        function clearResult() {
-            state.lastResult = '';
-            elements.resultContent.innerHTML = '<span style="color: var(--text-secondary);">識別結果將顯示於此...</span>';
-            $('#compareOriginal').textContent = '';
-            $('#compareEdited').textContent = '';
-        }
-
-        // ==================== Tabs ====================
-        function switchTab(tabName) {
-            $$('.result-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === tabName);
-            });
-
-            $$('[data-tab-content]').forEach(content => {
-                const isTarget = content.dataset.tabContent === tabName;
-                if (tabName === 'compare') {
-                    content.classList.toggle('visible', isTarget);
-                    content.classList.toggle('hidden', !isTarget && content.id !== 'compareContainer');
-                } else {
-                    content.classList.toggle('hidden', !isTarget);
-                    content.classList.toggle('visible', isTarget);
-                }
-            });
-
-            if (tabName === 'history') {
-                renderHistoryInTab();
-            }
-        }
-
-        // ==================== Mode Selection ====================
-        function setMode(mode) {
-            state.currentMode = mode;
-            $$('.mode-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.mode === mode);
-            });
-
-            $('#customPromptContainer').classList.toggle('visible', mode === 'custom');
-        }
-
-        // ==================== History ====================
-        function loadHistory() {
-            const saved = localStorage.getItem('qwen-ocr-history');
-            if (saved) {
-                state.history = JSON.parse(saved);
-            }
-        }
-
-        function saveToHistory(result, thumbnail) {
-            const entry = {
-                id: Date.now(),
-                result: result,
-                thumbnail: thumbnail.substring(0, 200), // Save small portion
-                mode: state.currentMode,
-                timestamp: new Date().toISOString()
-            };
-
-            state.history.unshift(entry);
-            state.history = state.history.slice(0, 50); // Keep last 50
-
-            localStorage.setItem('qwen-ocr-history', JSON.stringify(state.history));
-        }
-
-        function renderHistoryList() {
-            const container = $('#historyList');
-
-            if (state.history.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p>';
-                return;
-            }
-
-            container.innerHTML = state.history.map(entry => `
-                <div class="history-item" data-id="${entry.id}">
-                    <div class="history-time">${new Date(entry.timestamp).toLocaleString('zh-TW')}</div>
-                    <div class="history-preview">${entry.result.substring(0, 100)}...</div>
-                </div>
-            `).join('');
-
-            container.querySelectorAll('.history-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const entry = state.history.find(h => h.id === parseInt(item.dataset.id));
-                    if (entry) {
-                        displayResult(entry.result);
-                        elements.historyModal.classList.remove('visible');
-                    }
-                });
-            });
-        }
-
-        function renderHistoryInTab() {
-            const container = $('#historyContent');
-
-            if (state.history.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:20px;">暫無歷史記錄</p>';
-                return;
-            }
-
-            container.innerHTML = state.history.map(entry => `
-                <div class="history-item" data-id="${entry.id}">
-                    <div class="history-time">${new Date(entry.timestamp).toLocaleString('zh-TW')} - ${entry.mode}</div>
-                    <div class="history-preview">${entry.result.substring(0, 150)}...</div>
-                </div>
-            `).join('');
-
-            container.querySelectorAll('.history-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const entry = state.history.find(h => h.id === parseInt(item.dataset.id));
-                    if (entry) {
-                        displayResult(entry.result);
-                        switchTab('result');
-                    }
-                });
-            });
-        }
-
-        function clearHistoryData() {
-            if (confirm('確定要清除所有歷史記錄嗎？')) {
-                state.history = [];
-                localStorage.removeItem('qwen-ocr-history');
-                renderHistoryList();
-                showToast('歷史記錄已清除', 'success');
-            }
-        }
-
-        // ==================== Camera ====================
-        let cameraStream = null;
-
-        async function openCamera() {
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment' }
-                });
-                $('#cameraVideo').srcObject = cameraStream;
-                elements.cameraModal.classList.add('visible');
-            } catch (error) {
-                showToast('無法存取攝影機: ' + error.message, 'error');
-            }
-        }
-
-        function closeCamera() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            elements.cameraModal.classList.remove('visible');
-        }
-
-        function capturePhoto() {
-            const video = $('#cameraVideo');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-
-            canvas.toBlob((blob) => {
-                const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-                processFiles([file]);
-            }, 'image/jpeg', 0.9);
-
-            closeCamera();
-        }
-
-        // ==================== URL Loading ====================
-        async function loadFromUrl() {
-            const url = $('#imageUrl').value.trim();
-            if (!url) {
-                showToast('請輸入網址', 'error');
-                return;
-            }
-
-            elements.urlModal.classList.remove('visible');
-            elements.imageLoading.classList.add('visible');
-
-            try {
-                const response = await fetch(url);
-                const blob = await response.blob();
-                const file = new File([blob], 'url-image', { type: blob.type });
-                await processFiles([file]);
-            } catch (error) {
-                showToast('載入失敗: ' + error.message, 'error');
-            } finally {
-                elements.imageLoading.classList.remove('visible');
-            }
-        }
-
-        // ==================== Connection Check ====================
-        async function checkConnection() {
-            try {
-                const baseUrl = state.settings.apiEndpoint.replace('/chat/completions', '');
-                const response = await fetch(baseUrl + '/models', {
-                    method: 'GET',
-                    signal: AbortSignal.timeout(5000)
-                });
-
-                state.isOnline = response.ok;
-                updateConnectionStatus();
-            } catch (error) {
-                state.isOnline = false;
-                updateConnectionStatus();
-            }
-        }
-
-        function updateConnectionStatus() {
-            const dot = $('#connectionStatus');
-            const text = $('#connectionText');
-
-            if (state.isOnline) {
-                dot.classList.add('online');
-                dot.classList.remove('offline');
-                text.textContent = 'API 已連線';
-            } else {
-                dot.classList.add('offline');
-                dot.classList.remove('online');
-                text.textContent = 'API 離線';
-            }
-        }
-
-        async function refreshModelList() {
-            const select = $('#modelSelect');
-            select.innerHTML = '<option value="">載入中...</option>';
-
-            try {
-                const baseUrl = state.settings.apiEndpoint.replace('/chat/completions', '');
-                const response = await fetch(baseUrl + '/models');
-                const data = await response.json();
-
-                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
-
-                if (data.data) {
-                    state.availableModels = data.data;
-                    data.data.forEach(model => {
-                        if (model.id !== 'qwen3-vl-8b-instruct') {
-                            const option = document.createElement('option');
-                            option.value = model.id;
-                            option.textContent = model.id;
-                            if (model.id === state.settings.model) {
-                                option.selected = true;
-                            }
-                            select.appendChild(option);
-                        }
-                    });
-
-                    // Select current model
-                    if (state.settings.model) {
-                        select.value = state.settings.model;
-                    }
-                }
-
-                showToast('模型列表已更新', 'success');
-            } catch (error) {
-                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
-                showToast('無法取得模型列表', 'error');
-            }
-        }
-
-        async function refreshHeaderModelList() {
-            const select = elements.headerModelSelect;
-            const refreshBtn = $('#headerRefreshModels');
-
-            refreshBtn.classList.add('loading');
-            select.innerHTML = '<option value="">載入中...</option>';
-
-            try {
-                const baseUrl = state.settings.apiEndpoint.replace('/chat/completions', '');
-                const response = await fetch(baseUrl + '/models', {
-                    signal: AbortSignal.timeout(5000)
-                });
-                const data = await response.json();
-
-                // Build options with Qwen3-VL as default
-                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
-
-                if (data.data) {
-                    state.availableModels = data.data;
-
-                    // Check if Qwen3-VL exists in the list
-                    const hasQwen = data.data.some(m =>
-                        m.id.toLowerCase().includes('qwen') && m.id.toLowerCase().includes('vl')
-                    );
-
-                    data.data.forEach(model => {
-                        // Skip if already added as default
-                        if (model.id === 'qwen3-vl-8b-instruct') return;
-
-                        const option = document.createElement('option');
-                        option.value = model.id;
-
-                        // Mark Qwen VL models
-                        if (model.id.toLowerCase().includes('qwen') && model.id.toLowerCase().includes('vl')) {
-                            option.textContent = model.id + ' (VL)';
-                        } else {
-                            option.textContent = model.id;
-                        }
-
-                        select.appendChild(option);
-                    });
-                }
-
-                // Select saved model or default
-                select.value = state.settings.model || 'qwen3-vl-8b-instruct';
-
-                // If saved model doesn't exist in list, reset to default
-                if (!select.value) {
-                    select.value = 'qwen3-vl-8b-instruct';
-                    state.settings.model = 'qwen3-vl-8b-instruct';
-                }
-
-            } catch (error) {
-                // Keep default option on error
-                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
-                select.value = 'qwen3-vl-8b-instruct';
-            } finally {
-                refreshBtn.classList.remove('loading');
-            }
-        }
-
-        // ==================== Theme ====================
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-            const isLight = document.body.classList.contains('light-theme');
-            localStorage.setItem('qwen-ocr-theme', isLight ? 'light' : 'dark');
-        }
-
-        function loadTheme() {
-            const saved = localStorage.getItem('qwen-ocr-theme');
-            if (saved === 'light') {
-                document.body.classList.add('light-theme');
-            }
-        }
-        loadTheme();
-
-        // ==================== Utilities ====================
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            elements.toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.animation = 'slideIn 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function clearAll() {
-            if (state.images.length === 0) return;
-
-            if (confirm('確定要清除所有圖片嗎？')) {
-                state.images = [];
-                state.currentIndex = -1;
-                state.zoom = 1;
-                state.rotation = 0;
-                clearSelection();
-
-                elements.dropZone.classList.remove('hidden');
-                elements.imageCanvas.getContext('2d').clearRect(0, 0, elements.imageCanvas.width, elements.imageCanvas.height);
-                elements.zoomIndicator.style.display = 'none';
-                elements.thumbnailsBar.innerHTML = '';
-                $('#imageInfo').textContent = '圖片: --';
-            }
-        }
-
-        function resetSettings() {
-            state.settings = {
-                apiEndpoint: 'http://localhost:1234/v1/chat/completions',
-                model: 'qwen3-vl-8b-instruct',
-                customModel: '',
-                temperature: 0.1,
-                maxTokens: 4096,
-                maxResolution: 2048,
-                imageQuality: 0.85
-            };
-            applySettings();
-            elements.headerModelSelect.value = 'qwen3-vl-8b-instruct';
-            showToast('已重設為預設值', 'success');
-        }
-
-        // ==================== Keyboard Shortcuts ====================
-        function handleKeyboard(e) {
-            // Ctrl+V is handled by paste event
-
-            if (e.ctrlKey || e.metaKey) {
-                switch (e.key) {
-                    case 'Enter':
-                        e.preventDefault();
-                        startOCR();
-                        break;
-                    case 'c':
-                        if (!window.getSelection().toString()) {
-                            e.preventDefault();
-                            copyResult();
-                        }
-                        break;
-                }
-            }
-
-            // ESC to close modals
-            if (e.key === 'Escape') {
-                elements.settingsModal.classList.remove('visible');
-                elements.historyModal.classList.remove('visible');
-                elements.cameraModal.classList.remove('visible');
-                elements.urlModal.classList.remove('visible');
-                elements.pdfPageModal.classList.remove('visible');
-                closeCamera();
-            }
-        }
-
-        // ==================== PWA Setup ====================
-        function setupPWA() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js').catch(() => {
-                    // Service worker registration failed, app still works
-                });
-            }
-        }
+    }
+
+    async function saveManual() {
+        if (!state.lastResult) { toast('無內容', 'error'); return; }
+        const fmt = state.outputFormat, ts = timestamp();
+        const name = `OCR_manual_${ts}.${fmt}`;
+        const results = [{ pageNum: state.images[state.currentIndex]?.pageNum || 1, text: state.lastResult }];
+        try {
+            if (fmt === 'docx') download(await createDocx(results, 'manual'), name);
+            else if (fmt === 'xlsx') download(createXlsx(results), name);
+            else download(formatOutput(results, fmt, 'manual'), name);
+            toast('已下載', 'success');
+        } catch (e) { toast('儲存失敗', 'error'); }
+    }
+
+    function download(content, name) {
+        const blob = content instanceof Blob ? content : new Blob([content], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    async function selectFolder() {
+        try {
+            state.outputDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+            toast('已選擇輸出資料夾', 'success');
+        } catch (e) { if (e.name !== 'AbortError') toast('選擇失敗', 'error'); }
+    }
+
+    function setMode(m) { state.currentMode = m; $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m)); }
+    function switchTab(t) { $$('.right-tab').forEach(r => r.classList.toggle('active', r.dataset.tab === t)); $$('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === t)); }
+    function copyResult() { if (!state.lastResult) { toast('無內容', 'error'); return; } navigator.clipboard.writeText(state.lastResult).then(() => toast('已複製', 'success')); }
+    function clearAll() { if (!state.images.length) return; if (confirm('清除所有圖片?')) { state.images = []; state.currentIndex = -1; resetView(); $('#dropZone').classList.remove('hidden'); $('#imageWrapper').style.display = 'none'; $('#thumbnailsBar').innerHTML = ''; } }
+    function toast(msg, type = 'info') { const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg; $('#toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000); }
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function loadHistory() { const s = localStorage.getItem('qwen-ocr-history'); if (s) state.history = JSON.parse(s); }
+    function saveHistory(r, name) { state.history.unshift({ id: Date.now(), result: r.substring(0, 500), fileName: name, timestamp: new Date().toISOString() }); state.history = state.history.slice(0, 30); localStorage.setItem('qwen-ocr-history', JSON.stringify(state.history)); }
+    function clearHistory() { if (confirm('清除歷史?')) { state.history = []; localStorage.removeItem('qwen-ocr-history'); $('#historyContent').innerHTML = '<p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p>'; } }
+
+    let camStream = null;
+    async function openCamera() { try { camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); $('#cameraVideo').srcObject = camStream; $('#cameraModal').classList.add('visible'); } catch { toast('無法存取攝影機', 'error'); } }
+    function closeCamera() { if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; } $('#cameraModal').classList.remove('visible'); }
+    function capture() { const v = $('#cameraVideo'), c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); c.toBlob(b => processFiles([new File([b], 'camera.jpg', { type: 'image/jpeg' })]), 'image/jpeg', 0.9); closeCamera(); }
+
+    async function checkConnection() {
+        try {
+            const r = await fetch(state.settings.apiEndpoint.replace('/chat/completions', '/models'), { signal: AbortSignal.timeout(5000) });
+            state.isOnline = r.ok;
+        } catch { state.isOnline = false; }
+        $('#connectionStatus').classList.toggle('online', state.isOnline);
+        $('#connectionStatus').classList.toggle('offline', !state.isOnline);
+        $('#connectionText').textContent = state.isOnline ? 'API 已連線' : 'API 離線';
+    }
+
+    async function refreshModels() {
+        try {
+            const r = await fetch(state.settings.apiEndpoint.replace('/chat/completions', '/models'), { signal: AbortSignal.timeout(5000) });
+            const d = await r.json();
+            const s = $('#headerModelSelect');
+            s.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B</option>';
+            if (d.data) d.data.forEach(m => { if (m.id !== 'qwen3-vl-8b-instruct') s.innerHTML += `<option value="${m.id}">${m.id}</option>`; });
+            s.value = state.settings.model;
+        } catch {}
+    }
     </script>
 </body>
 </html>
