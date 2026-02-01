@@ -524,6 +524,116 @@
             border-radius: 4px;
             font-size: 11px;
         }
+        /* Model Selector in Header */
+        .model-selector-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+        .model-selector-container label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .model-selector-container select {
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 11px;
+            min-width: 160px;
+            cursor: pointer;
+        }
+        .model-selector-container .refresh-btn {
+            padding: 4px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .model-selector-container .refresh-btn:hover {
+            color: var(--accent);
+        }
+        .model-selector-container .refresh-btn.loading svg {
+            animation: spin 1s linear infinite;
+        }
+        /* PDF Page Range Styles */
+        .page-range-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 8px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+        .page-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .page-checkbox:hover {
+            border-color: var(--accent);
+        }
+        .page-checkbox.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        .range-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .range-input-group input {
+            width: 80px;
+            padding: 6px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 12px;
+            text-align: center;
+        }
+        .range-input-group span {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+        .quick-select-btns {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .quick-select-btns button {
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .quick-select-btns button:hover {
+            background: var(--border);
+        }
     </style>
 </head>
 <body>
@@ -538,6 +648,17 @@
                 Qwen3-VL OCR
             </h1>
             <div class="header-actions">
+                <div class="model-selector-container">
+                    <label>模型:</label>
+                    <select id="headerModelSelect">
+                        <option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>
+                    </select>
+                    <button class="refresh-btn" id="headerRefreshModels" title="重新整理模型列表">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+                        </svg>
+                    </button>
+                </div>
                 <button class="btn btn-icon" id="themeToggle" title="切換主題">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="5"/>
@@ -842,6 +963,49 @@
         </div>
     </div>
 
+    <!-- PDF Page Range Modal -->
+    <div class="modal-overlay" id="pdfPageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📄 選擇 PDF 頁面</h2>
+                <button class="btn btn-icon" id="closePdfPage">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>檔案名稱: <span id="pdfFileName">-</span></label>
+                    <label>總頁數: <span id="pdfTotalPages">-</span> 頁</label>
+                </div>
+                <div class="form-group">
+                    <label>頁面範圍</label>
+                    <div class="range-input-group">
+                        <input type="number" id="pdfStartPage" min="1" value="1" placeholder="起始">
+                        <span>至</span>
+                        <input type="number" id="pdfEndPage" min="1" value="1" placeholder="結束">
+                        <button class="btn btn-secondary" id="applyPageRange">套用範圍</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>快速選取</label>
+                    <div class="quick-select-btns">
+                        <button id="selectAllPages">全選</button>
+                        <button id="selectNonePages">取消全選</button>
+                        <button id="selectOddPages">奇數頁</button>
+                        <button id="selectEvenPages">偶數頁</button>
+                        <button id="selectFirst10">前 10 頁</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>點選頁面（已選: <span id="selectedPageCount">0</span> 頁）</label>
+                    <div class="page-range-grid" id="pageRangeGrid"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPdfPage">取消</button>
+                <button class="btn btn-primary" id="confirmPdfPages">載入選取頁面</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -864,7 +1028,7 @@
             currentMode: 'text',
             settings: {
                 apiEndpoint: 'http://localhost:1234/v1/chat/completions',
-                model: '',
+                model: 'qwen3-vl-8b-instruct',
                 customModel: '',
                 temperature: 0.1,
                 maxTokens: 4096,
@@ -873,7 +1037,12 @@
             },
             history: [],
             lastResult: '',
-            isOnline: false
+            isOnline: false,
+            // PDF page selection state
+            pendingPdf: null,
+            pdfNumPages: 0,
+            selectedPdfPages: new Set(),
+            availableModels: []
         };
 
         // ==================== DOM Elements ====================
@@ -892,10 +1061,13 @@
             historyModal: $('#historyModal'),
             cameraModal: $('#cameraModal'),
             urlModal: $('#urlModal'),
+            pdfPageModal: $('#pdfPageModal'),
             imageLoading: $('#imageLoading'),
             resultLoading: $('#resultLoading'),
             zoomIndicator: $('#zoomIndicator'),
-            toastContainer: $('#toastContainer')
+            toastContainer: $('#toastContainer'),
+            headerModelSelect: $('#headerModelSelect'),
+            pageRangeGrid: $('#pageRangeGrid')
         };
 
         // ==================== Initialization ====================
@@ -907,6 +1079,9 @@
             setupEventListeners();
             checkConnection();
             setupPWA();
+
+            // Auto-load model list on startup
+            await refreshHeaderModelList();
 
             // Check connection periodically
             setInterval(checkConnection, 30000);
@@ -931,16 +1106,24 @@
             $('#maxResolution').value = state.settings.maxResolution;
             $('#imageQuality').value = state.settings.imageQuality;
             $('#qualityValue').textContent = Math.round(state.settings.imageQuality * 100) + '%';
+
+            // Sync header model selector
+            if (elements.headerModelSelect) {
+                elements.headerModelSelect.value = state.settings.model || 'qwen3-vl-8b-instruct';
+            }
         }
 
         function saveSettings() {
             state.settings.apiEndpoint = $('#apiEndpoint').value;
-            state.settings.model = $('#modelSelect').value;
+            state.settings.model = $('#modelSelect').value || state.settings.model;
             state.settings.customModel = $('#customModel').value;
             state.settings.temperature = parseFloat($('#temperature').value);
             state.settings.maxTokens = parseInt($('#maxTokens').value);
             state.settings.maxResolution = parseInt($('#maxResolution').value);
             state.settings.imageQuality = parseFloat($('#imageQuality').value);
+
+            // Sync header model selector
+            elements.headerModelSelect.value = state.settings.model;
 
             localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings));
             showToast('設定已儲存', 'success');
@@ -1036,6 +1219,25 @@
             // Start OCR
             $('#startOCR').addEventListener('click', startOCR);
 
+            // Header Model Selector
+            elements.headerModelSelect.addEventListener('change', (e) => {
+                state.settings.model = e.target.value;
+                localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings));
+                showToast(`已切換模型: ${e.target.value}`, 'success');
+            });
+            $('#headerRefreshModels').addEventListener('click', refreshHeaderModelList);
+
+            // PDF Page Range Modal
+            $('#closePdfPage').addEventListener('click', closePdfPageModal);
+            $('#cancelPdfPage').addEventListener('click', closePdfPageModal);
+            $('#confirmPdfPages').addEventListener('click', confirmPdfPages);
+            $('#applyPageRange').addEventListener('click', applyPageRange);
+            $('#selectAllPages').addEventListener('click', () => selectPdfPages('all'));
+            $('#selectNonePages').addEventListener('click', () => selectPdfPages('none'));
+            $('#selectOddPages').addEventListener('click', () => selectPdfPages('odd'));
+            $('#selectEvenPages').addEventListener('click', () => selectPdfPages('even'));
+            $('#selectFirst10').addEventListener('click', () => selectPdfPages('first10'));
+
             // Keyboard shortcuts
             document.addEventListener('keydown', handleKeyboard);
         }
@@ -1127,45 +1329,188 @@
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
             const numPages = pdf.numPages;
 
+            // Store PDF info for later processing
+            state.pendingPdf = { file, pdf, arrayBuffer };
+            state.pdfNumPages = numPages;
+            state.selectedPdfPages = new Set();
+
+            // Update modal info
+            $('#pdfFileName').textContent = file.name;
+            $('#pdfTotalPages').textContent = numPages;
+            $('#pdfStartPage').value = 1;
+            $('#pdfStartPage').max = numPages;
+            $('#pdfEndPage').value = numPages;
+            $('#pdfEndPage').max = numPages;
+
+            // Generate page selection grid
+            renderPdfPageGrid(numPages);
+
+            // Select all pages by default
+            selectPdfPages('all');
+
+            // Show modal
+            elements.imageLoading.classList.remove('visible');
+            elements.pdfPageModal.classList.add('visible');
+        }
+
+        function renderPdfPageGrid(numPages) {
+            const grid = elements.pageRangeGrid;
+            grid.innerHTML = '';
+
             for (let i = 1; i <= numPages; i++) {
-                const page = await pdf.getPage(i);
-                const scale = 2;
-                const viewport = page.getViewport({ scale });
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'page-checkbox';
+                pageDiv.textContent = i;
+                pageDiv.dataset.page = i;
 
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-
-                await page.render({
-                    canvasContext: ctx,
-                    viewport: viewport
-                }).promise;
-
-                // Convert to image and process
-                const img = new Image();
-                await new Promise((resolve) => {
-                    img.onload = resolve;
-                    img.src = canvas.toDataURL('image/png');
+                pageDiv.addEventListener('click', () => {
+                    pageDiv.classList.toggle('selected');
+                    if (pageDiv.classList.contains('selected')) {
+                        state.selectedPdfPages.add(i);
+                    } else {
+                        state.selectedPdfPages.delete(i);
+                    }
+                    updateSelectedPageCount();
                 });
 
-                const processed = await preprocessImage(img);
-                const id = Date.now() + Math.random();
-                const thumbnail = createThumbnail(processed);
+                grid.appendChild(pageDiv);
+            }
+        }
 
-                state.images.push({
-                    id,
-                    canvas: processed,
-                    originalFile: file,
-                    rotation: 0,
-                    thumbnail,
-                    pageNum: i,
-                    totalPages: numPages
-                });
+        function selectPdfPages(mode) {
+            const pageCheckboxes = $$('.page-checkbox');
+            state.selectedPdfPages.clear();
+
+            pageCheckboxes.forEach((checkbox, index) => {
+                const pageNum = index + 1;
+                let shouldSelect = false;
+
+                switch (mode) {
+                    case 'all':
+                        shouldSelect = true;
+                        break;
+                    case 'none':
+                        shouldSelect = false;
+                        break;
+                    case 'odd':
+                        shouldSelect = pageNum % 2 === 1;
+                        break;
+                    case 'even':
+                        shouldSelect = pageNum % 2 === 0;
+                        break;
+                    case 'first10':
+                        shouldSelect = pageNum <= 10;
+                        break;
+                }
+
+                checkbox.classList.toggle('selected', shouldSelect);
+                if (shouldSelect) {
+                    state.selectedPdfPages.add(pageNum);
+                }
+            });
+
+            updateSelectedPageCount();
+        }
+
+        function applyPageRange() {
+            const start = parseInt($('#pdfStartPage').value) || 1;
+            const end = parseInt($('#pdfEndPage').value) || state.pdfNumPages;
+
+            const pageCheckboxes = $$('.page-checkbox');
+            state.selectedPdfPages.clear();
+
+            pageCheckboxes.forEach((checkbox, index) => {
+                const pageNum = index + 1;
+                const shouldSelect = pageNum >= start && pageNum <= end;
+
+                checkbox.classList.toggle('selected', shouldSelect);
+                if (shouldSelect) {
+                    state.selectedPdfPages.add(pageNum);
+                }
+            });
+
+            updateSelectedPageCount();
+        }
+
+        function updateSelectedPageCount() {
+            $('#selectedPageCount').textContent = state.selectedPdfPages.size;
+        }
+
+        function closePdfPageModal() {
+            elements.pdfPageModal.classList.remove('visible');
+            state.pendingPdf = null;
+            state.pdfNumPages = 0;
+            state.selectedPdfPages.clear();
+        }
+
+        async function confirmPdfPages() {
+            if (state.selectedPdfPages.size === 0) {
+                showToast('請至少選擇一個頁面', 'error');
+                return;
             }
 
-            renderThumbnails();
-            elements.dropZone.classList.add('hidden');
+            elements.pdfPageModal.classList.remove('visible');
+            elements.imageLoading.classList.add('visible');
+
+            const { file, pdf } = state.pendingPdf;
+            const numPages = state.pdfNumPages;
+            const selectedPages = Array.from(state.selectedPdfPages).sort((a, b) => a - b);
+
+            try {
+                for (const pageNum of selectedPages) {
+                    const page = await pdf.getPage(pageNum);
+                    const scale = 2;
+                    const viewport = page.getViewport({ scale });
+
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    await page.render({
+                        canvasContext: ctx,
+                        viewport: viewport
+                    }).promise;
+
+                    // Convert to image and process
+                    const img = new Image();
+                    await new Promise((resolve) => {
+                        img.onload = resolve;
+                        img.src = canvas.toDataURL('image/png');
+                    });
+
+                    const processed = await preprocessImage(img);
+                    const id = Date.now() + Math.random();
+                    const thumbnail = createThumbnail(processed);
+
+                    state.images.push({
+                        id,
+                        canvas: processed,
+                        originalFile: file,
+                        rotation: 0,
+                        thumbnail,
+                        pageNum: pageNum,
+                        totalPages: numPages
+                    });
+                }
+
+                renderThumbnails();
+                elements.dropZone.classList.add('hidden');
+
+                if (state.images.length > 0 && state.currentIndex === -1) {
+                    selectImage(0);
+                }
+
+                showToast(`已載入 ${selectedPages.length} 頁`, 'success');
+
+            } catch (error) {
+                showToast('PDF 處理失敗: ' + error.message, 'error');
+            } finally {
+                elements.imageLoading.classList.remove('visible');
+                state.pendingPdf = null;
+                state.pdfNumPages = 0;
+                state.selectedPdfPages.clear();
+            }
         }
 
         async function preprocessImage(img) {
@@ -1470,7 +1815,7 @@
         }
 
         async function callOCRAPI(base64Image, prompt) {
-            const model = state.settings.customModel || state.settings.model || 'qwen3-vl-8b-instruct';
+            const model = state.settings.customModel || state.settings.model || elements.headerModelSelect.value || 'qwen3-vl-8b-instruct';
 
             const requestBody = {
                 model: model,
@@ -1820,24 +2165,93 @@
                 const response = await fetch(baseUrl + '/models');
                 const data = await response.json();
 
-                select.innerHTML = '<option value="">自動偵測</option>';
+                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
 
                 if (data.data) {
+                    state.availableModels = data.data;
                     data.data.forEach(model => {
-                        const option = document.createElement('option');
-                        option.value = model.id;
-                        option.textContent = model.id;
-                        if (model.id === state.settings.model) {
-                            option.selected = true;
+                        if (model.id !== 'qwen3-vl-8b-instruct') {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.id;
+                            if (model.id === state.settings.model) {
+                                option.selected = true;
+                            }
+                            select.appendChild(option);
                         }
-                        select.appendChild(option);
                     });
+
+                    // Select current model
+                    if (state.settings.model) {
+                        select.value = state.settings.model;
+                    }
                 }
 
                 showToast('模型列表已更新', 'success');
             } catch (error) {
-                select.innerHTML = '<option value="">無法取得模型列表</option>';
+                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
                 showToast('無法取得模型列表', 'error');
+            }
+        }
+
+        async function refreshHeaderModelList() {
+            const select = elements.headerModelSelect;
+            const refreshBtn = $('#headerRefreshModels');
+
+            refreshBtn.classList.add('loading');
+            select.innerHTML = '<option value="">載入中...</option>';
+
+            try {
+                const baseUrl = state.settings.apiEndpoint.replace('/chat/completions', '');
+                const response = await fetch(baseUrl + '/models', {
+                    signal: AbortSignal.timeout(5000)
+                });
+                const data = await response.json();
+
+                // Build options with Qwen3-VL as default
+                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
+
+                if (data.data) {
+                    state.availableModels = data.data;
+
+                    // Check if Qwen3-VL exists in the list
+                    const hasQwen = data.data.some(m =>
+                        m.id.toLowerCase().includes('qwen') && m.id.toLowerCase().includes('vl')
+                    );
+
+                    data.data.forEach(model => {
+                        // Skip if already added as default
+                        if (model.id === 'qwen3-vl-8b-instruct') return;
+
+                        const option = document.createElement('option');
+                        option.value = model.id;
+
+                        // Mark Qwen VL models
+                        if (model.id.toLowerCase().includes('qwen') && model.id.toLowerCase().includes('vl')) {
+                            option.textContent = model.id + ' (VL)';
+                        } else {
+                            option.textContent = model.id;
+                        }
+
+                        select.appendChild(option);
+                    });
+                }
+
+                // Select saved model or default
+                select.value = state.settings.model || 'qwen3-vl-8b-instruct';
+
+                // If saved model doesn't exist in list, reset to default
+                if (!select.value) {
+                    select.value = 'qwen3-vl-8b-instruct';
+                    state.settings.model = 'qwen3-vl-8b-instruct';
+                }
+
+            } catch (error) {
+                // Keep default option on error
+                select.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B (預設)</option>';
+                select.value = 'qwen3-vl-8b-instruct';
+            } finally {
+                refreshBtn.classList.remove('loading');
             }
         }
 
@@ -1890,7 +2304,7 @@
         function resetSettings() {
             state.settings = {
                 apiEndpoint: 'http://localhost:1234/v1/chat/completions',
-                model: '',
+                model: 'qwen3-vl-8b-instruct',
                 customModel: '',
                 temperature: 0.1,
                 maxTokens: 4096,
@@ -1898,6 +2312,7 @@
                 imageQuality: 0.85
             };
             applySettings();
+            elements.headerModelSelect.value = 'qwen3-vl-8b-instruct';
             showToast('已重設為預設值', 'success');
         }
 
@@ -1926,6 +2341,7 @@
                 elements.historyModal.classList.remove('visible');
                 elements.cameraModal.classList.remove('visible');
                 elements.urlModal.classList.remove('visible');
+                elements.pdfPageModal.classList.remove('visible');
                 closeCamera();
             }
         }
