@@ -85,128 +85,418 @@
         }
         /* Main Content */
         .main-content { display: flex; flex: 1; overflow: hidden; min-height: 0; }
-        /* Left Panel */
-        .left-panel { width: 50%; display: flex; flex-direction: column; border-right: 1px solid var(--border); min-width: 280px; }
-        .image-toolbar {
-            display: flex; gap: 3px; padding: 4px 6px;
-            background: var(--bg-secondary); border-bottom: 1px solid var(--border);
-            flex-wrap: wrap; align-items: center;
+        /* Left Panel - Now with file input + queue */
+        .left-panel {
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            min-width: 180px;
+            max-width: 280px;
+            flex-shrink: 0;
         }
-        .toolbar-group { display: flex; gap: 2px; padding-right: 6px; border-right: 1px solid var(--border); }
+        .file-section {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+        .file-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .drop-zone-mini {
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .drop-zone-mini:hover, .drop-zone-mini.active {
+            border-color: var(--accent);
+            background: rgba(233, 69, 96, 0.1);
+        }
+        .drop-zone-mini-icon { font-size: 24px; margin-bottom: 4px; }
+        .drop-zone-mini-text { font-size: 10px; color: var(--text-secondary); }
+        /* Queue Section */
+        .queue-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .queue-header {
+            padding: 6px 8px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .queue-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px;
+        }
+        .queue-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 4px;
+            font-size: 10px;
+        }
+        .queue-item.active { border-color: var(--accent); }
+        .queue-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 6px;
+            cursor: pointer;
+        }
+        .queue-item-header:hover { background: var(--bg-secondary); }
+        .queue-item-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .queue-item-actions { display: flex; gap: 2px; }
+        .queue-item-actions button {
+            padding: 1px 4px;
+            font-size: 9px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        .queue-item-actions button:hover { background: var(--border); }
+        .queue-item-body { padding: 4px 6px; border-top: 1px solid var(--border); }
+        .queue-page-input {
+            width: 100%;
+            padding: 3px 5px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            color: var(--text-primary);
+            font-size: 9px;
+        }
+        .queue-page-info { color: var(--text-secondary); font-size: 9px; margin-top: 2px; }
+        .queue-page-error { color: var(--accent); font-size: 9px; margin-top: 2px; }
+        .queue-summary {
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            font-size: 9px;
+            color: var(--text-secondary);
+        }
+        .queue-actions {
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        /* Center Panel - Image preview */
+        .center-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 300px;
+        }
+        .image-toolbar {
+            display: flex;
+            gap: 3px;
+            padding: 4px 6px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .toolbar-group {
+            display: flex;
+            gap: 2px;
+            padding-right: 6px;
+            border-right: 1px solid var(--border);
+        }
         .toolbar-group:last-child { border-right: none; }
-        .image-container { flex: 1; position: relative; overflow: hidden; background: var(--bg-primary); }
+        .image-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
         .image-wrapper {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); cursor: grab;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
         }
         .image-wrapper.dragging { cursor: grabbing; }
         .image-wrapper canvas { display: block; max-width: none; }
-        .drop-zone {
-            position: absolute; inset: 0; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            border: 2px dashed var(--border); margin: 6px; border-radius: 6px;
-            transition: all 0.3s; cursor: pointer;
+        .no-image-hint {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 12px;
         }
-        .drop-zone.active { border-color: var(--accent); background: rgba(233, 69, 96, 0.1); }
-        .drop-zone.hidden { display: none; }
-        .drop-zone-icon { font-size: 36px; margin-bottom: 8px; opacity: 0.5; }
-        .drop-zone-text { color: var(--text-secondary); font-size: 12px; }
-        .drop-zone-hint { color: var(--text-secondary); font-size: 10px; margin-top: 6px; }
+        .no-image-hint.hidden { display: none; }
         .selection-box {
-            position: absolute; border: 2px solid var(--accent);
-            background: rgba(233, 69, 96, 0.2); pointer-events: none; display: none;
+            position: absolute;
+            border: 2px solid var(--accent);
+            background: rgba(233, 69, 96, 0.2);
+            pointer-events: none;
+            display: none;
         }
         .zoom-indicator {
-            position: absolute; bottom: 6px; left: 6px;
-            background: rgba(0,0,0,0.7); color: white;
-            padding: 3px 6px; border-radius: 3px; font-size: 10px;
+            position: absolute;
+            bottom: 6px;
+            left: 6px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 10px;
         }
+        /* Page Selection Controls */
+        .page-select-controls {
+            display: flex;
+            gap: 4px;
+            padding: 4px 6px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            font-size: 10px;
+        }
+        .page-select-btn {
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 9px;
+        }
+        .page-select-btn:hover { background: var(--border); }
+        .page-select-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
         /* Thumbnails */
         .thumbnails-bar {
-            display: flex; gap: 3px; padding: 4px 6px;
-            background: var(--bg-secondary); border-top: 1px solid var(--border);
-            overflow-x: auto; flex-shrink: 0; min-height: 50px;
+            display: flex;
+            gap: 3px;
+            padding: 4px 6px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            overflow-x: auto;
+            flex-shrink: 0;
+            min-height: 50px;
         }
-        .thumbnail { width: 40px; height: 40px; border-radius: 3px; object-fit: cover; cursor: pointer; border: 2px solid transparent; flex-shrink: 0; }
+        .thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: 3px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            flex-shrink: 0;
+        }
         .thumbnail.active { border-color: var(--accent); }
+        .thumbnail.selected { border-color: var(--success); }
         .thumbnail-wrapper { position: relative; }
-        .thumbnail-close {
-            position: absolute; top: -3px; right: -3px; width: 14px; height: 14px;
-            background: var(--accent); border-radius: 50%; border: none;
-            color: white; font-size: 9px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+        .thumbnail-checkbox {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
         }
         .page-indicator {
-            position: absolute; bottom: 1px; right: 1px;
-            background: rgba(0,0,0,0.7); color: white;
-            font-size: 8px; padding: 1px 3px; border-radius: 2px;
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 8px;
+            padding: 1px 3px;
+            border-radius: 2px;
         }
         /* Right Panel */
-        .right-panel { width: 50%; display: flex; flex-direction: column; min-width: 280px; }
-        .right-tabs { display: flex; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+        .right-panel {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            min-width: 280px;
+            border-left: 1px solid var(--border);
+        }
+        .right-tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
         .right-tab {
-            padding: 6px 12px; border: none; background: transparent;
-            color: var(--text-secondary); cursor: pointer; font-size: 11px;
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 11px;
             border-bottom: 2px solid transparent;
         }
         .right-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .tab-content { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+        .tab-content {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
         .tab-content.active { display: flex; }
         /* OCR Controls */
-        .ocr-controls { padding: 6px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
-        .ocr-mode-row { display: flex; gap: 4px; margin-bottom: 6px; flex-wrap: wrap; }
+        .ocr-controls {
+            padding: 6px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        .ocr-mode-row {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
         .mode-btn {
-            padding: 3px 8px; border: 1px solid var(--border);
-            background: var(--bg-tertiary); color: var(--text-secondary);
-            border-radius: 3px; cursor: pointer; font-size: 10px;
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
         }
         .mode-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
-        .ocr-scope-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .ocr-scope-row label { font-size: 10px; display: flex; align-items: center; gap: 3px; cursor: pointer; }
-        .output-format-row { display: flex; gap: 4px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+        .ocr-scope-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .ocr-scope-row label {
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+        }
+        .output-format-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
         .output-format-row label { font-size: 10px; color: var(--text-secondary); }
         .output-format-row select {
-            padding: 3px 6px; background: var(--bg-tertiary);
-            border: 1px solid var(--border); border-radius: 3px;
-            color: var(--text-primary); font-size: 10px;
+            padding: 3px 6px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            color: var(--text-primary);
+            font-size: 10px;
+        }
+        /* Result Actions at Top */
+        .result-actions-top {
+            display: flex;
+            gap: 3px;
+            padding: 4px 6px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
         }
         /* Result */
-        .result-container { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-        .result-content { flex: 1; overflow-y: auto; padding: 8px; font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-        .result-actions { display: flex; gap: 3px; padding: 4px 6px; background: var(--bg-secondary); border-top: 1px solid var(--border); flex-wrap: wrap; }
-        .result-file-header { background: var(--bg-tertiary); padding: 6px 8px; margin: 8px 0 4px 0; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .result-page-header { color: var(--accent); font-size: 10px; margin: 8px 0 4px 0; padding-bottom: 2px; border-bottom: 1px dashed var(--border); }
-        /* Queue */
-        .queue-container { flex: 1; overflow-y: auto; padding: 6px; }
-        .queue-item { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 6px; }
-        .queue-item.active { border-color: var(--accent); }
-        .queue-item-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 6px 8px; background: var(--bg-secondary); cursor: pointer;
+        .result-container {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
-        .queue-item-name { font-size: 11px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .queue-item-actions { display: flex; gap: 2px; }
-        .queue-item-actions button {
-            padding: 2px 4px; font-size: 10px; background: var(--bg-tertiary);
-            border: 1px solid var(--border); color: var(--text-primary);
-            border-radius: 2px; cursor: pointer;
+        .result-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
-        .queue-item-actions button:hover { background: var(--border); }
-        .queue-item-body { padding: 6px 8px; font-size: 10px; }
-        .queue-page-input {
-            width: 100%; padding: 4px 6px; background: var(--bg-primary);
-            border: 1px solid var(--border); border-radius: 3px;
-            color: var(--text-primary); font-size: 10px; margin-top: 4px;
+        .result-file-header {
+            background: var(--bg-tertiary);
+            padding: 6px 8px;
+            margin: 8px 0 4px 0;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
         }
-        .queue-page-info { color: var(--text-secondary); margin-top: 3px; }
-        .queue-page-error { color: var(--accent); font-size: 9px; margin-top: 2px; }
-        .queue-summary { padding: 6px 8px; background: var(--bg-secondary); border-top: 1px solid var(--border); font-size: 10px; color: var(--text-secondary); }
-        .queue-actions { padding: 6px; background: var(--bg-secondary); border-top: 1px solid var(--border); display: flex; gap: 4px; flex-wrap: wrap; }
+        .result-page-header {
+            color: var(--accent);
+            font-size: 10px;
+            margin: 8px 0 4px 0;
+            padding-bottom: 2px;
+            border-bottom: 1px dashed var(--border);
+        }
+        /* Loading */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+        .loading-overlay.visible { display: flex; }
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Progress */
+        .progress-bar {
+            height: 3px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+            width: 80%;
+        }
+        .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
         /* Status Bar */
         .status-bar {
-            display: flex; justify-content: space-between; padding: 3px 10px;
-            background: var(--bg-secondary); border-top: 1px solid var(--border);
-            font-size: 10px; color: var(--text-secondary); flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 10px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            font-size: 10px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
         }
         .status-item { display: flex; align-items: center; gap: 4px; }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); }
@@ -214,51 +504,84 @@
         .status-dot.offline { background: var(--accent); }
         /* Modal */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-            display: none; align-items: center; justify-content: center; z-index: 1000;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
         .modal-overlay.visible { display: flex; }
         .modal {
-            background: var(--bg-secondary); border-radius: 6px;
-            width: 90%; max-width: 450px; max-height: 80vh;
-            overflow-y: auto; box-shadow: 0 4px 20px var(--shadow);
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px var(--shadow);
         }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
         .modal-header h2 { font-size: 13px; }
         .modal-body { padding: 12px; }
-        .modal-footer { padding: 10px 12px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 6px; }
+        .modal-footer {
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
         .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; font-size: 11px; margin-bottom: 3px; color: var(--text-secondary); }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 3px;
+            color: var(--text-secondary);
+        }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 6px 8px; background: var(--bg-tertiary);
-            border: 1px solid var(--border); border-radius: 4px;
-            color: var(--text-primary); font-size: 11px;
+            width: 100%;
+            padding: 6px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 11px;
         }
         .range-value { display: inline-block; margin-left: 6px; color: var(--accent); }
-        /* Loading */
-        .loading-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.5);
-            display: none; align-items: center; justify-content: center;
-            flex-direction: column; gap: 8px; z-index: 100;
-        }
-        .loading-overlay.visible { display: flex; }
-        .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
         /* Toast */
-        .toast-container { position: fixed; top: 50px; right: 12px; z-index: 2000; display: flex; flex-direction: column; gap: 6px; }
-        .toast { padding: 8px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; box-shadow: 0 2px 10px var(--shadow); font-size: 11px; animation: slideIn 0.3s ease; }
+        .toast-container {
+            position: fixed;
+            top: 50px;
+            right: 12px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .toast {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px var(--shadow);
+            font-size: 11px;
+            animation: slideIn 0.3s ease;
+        }
         .toast.success { border-left: 3px solid var(--success); }
         .toast.error { border-left: 3px solid var(--accent); }
         .toast.info { border-left: 3px solid var(--warning); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        /* Progress */
-        .progress-bar { height: 3px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; margin-top: 4px; width: 80%; }
-        .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
         /* Responsive */
-        @media (max-width: 768px) {
-            .main-content { flex-direction: column; }
-            .left-panel, .right-panel { width: 100%; height: 50%; border-right: none; }
-            .left-panel { border-bottom: 1px solid var(--border); }
+        @media (max-width: 900px) {
+            .left-panel { width: 180px; min-width: 150px; }
+            .right-panel { width: 40%; min-width: 220px; }
         }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
@@ -283,12 +606,39 @@
         </header>
 
         <main class="main-content">
+            <!-- Left Panel: File Upload + Queue -->
             <section class="left-panel">
-                <div class="image-toolbar">
-                    <div class="toolbar-group">
-                        <button class="btn btn-icon" id="openFile" title="開啟檔案">📂</button>
-                        <button class="btn btn-icon" id="cameraCapture" title="攝影機">📷</button>
+                <div class="file-section">
+                    <div class="file-section-title">📂 開啟檔案</div>
+                    <div class="drop-zone-mini" id="dropZone">
+                        <div class="drop-zone-mini-icon">📄</div>
+                        <div class="drop-zone-mini-text">點擊或拖放檔案<br>JPG/PNG/PDF</div>
                     </div>
+                    <div style="display:flex;gap:4px;margin-top:6px;">
+                        <button class="btn btn-secondary" id="openFile" style="flex:1;font-size:9px;">📂 瀏覽</button>
+                        <button class="btn btn-secondary" id="cameraCapture" style="flex:1;font-size:9px;">📷 相機</button>
+                    </div>
+                </div>
+
+                <div class="queue-section">
+                    <div class="queue-header">
+                        <span>📋 待辨識清單</span>
+                        <button class="btn btn-icon" id="clearQueue" title="清空" style="font-size:10px;">🗑</button>
+                    </div>
+                    <div class="queue-container" id="queueContainer">
+                        <p style="color:var(--text-secondary);text-align:center;padding:15px;font-size:10px;">尚無待辨識項目</p>
+                    </div>
+                    <div class="queue-summary" id="queueSummary">總計: 0 個檔案, 0 頁</div>
+                    <div class="queue-actions">
+                        <button class="btn btn-secondary" id="addToQueue" style="flex:1;font-size:9px;">+ 加入</button>
+                        <button class="btn btn-primary" id="processQueue" style="flex:1;font-size:9px;">▶ 全部辨識</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center Panel: Image Preview -->
+            <section class="center-panel">
+                <div class="image-toolbar">
                     <div class="toolbar-group">
                         <button class="btn btn-icon" id="rotateLeft" title="向左旋轉">↺</button>
                         <button class="btn btn-icon" id="rotateRight" title="向右旋轉">↻</button>
@@ -298,14 +648,14 @@
                     </div>
                     <div class="toolbar-group">
                         <button class="btn btn-icon" id="selectRegion" title="框選區域">▢</button>
-                        <button class="btn btn-icon" id="clearAll" title="清除全部">🗑</button>
+                        <button class="btn btn-icon" id="clearCurrent" title="移除目前">✕</button>
                     </div>
                 </div>
+
                 <div class="image-container" id="imageContainer">
-                    <div class="drop-zone" id="dropZone">
-                        <div class="drop-zone-icon">📄</div>
-                        <div class="drop-zone-text">拖放圖片或 PDF 至此處</div>
-                        <div class="drop-zone-hint">支援 JPG、PNG、PDF | Ctrl+V 貼上</div>
+                    <div class="no-image-hint" id="noImageHint">
+                        <div style="font-size:36px;opacity:0.3;margin-bottom:8px;">🖼</div>
+                        <div>請從左側上傳檔案</div>
                     </div>
                     <div class="image-wrapper" id="imageWrapper" style="display:none;">
                         <canvas id="imageCanvas"></canvas>
@@ -314,13 +664,23 @@
                     <div class="zoom-indicator" id="zoomIndicator" style="display:none;">100%</div>
                     <div class="loading-overlay" id="imageLoading"><div class="spinner"></div><span>處理中...</span></div>
                 </div>
+
+                <!-- Page Selection Controls -->
+                <div class="page-select-controls">
+                    <span style="color:var(--text-secondary);">頁面選擇:</span>
+                    <button class="page-select-btn" id="selectAll" title="全數指定">全選</button>
+                    <button class="page-select-btn" id="selectNone" title="取消全選">全不選</button>
+                    <button class="page-select-btn" id="autoSelect" title="自動辨識已勾選">自動辨識</button>
+                    <span style="margin-left:auto;color:var(--text-secondary);" id="selectedCount">已選: 0</span>
+                </div>
+
                 <div class="thumbnails-bar" id="thumbnailsBar"></div>
             </section>
 
+            <!-- Right Panel: Results -->
             <section class="right-panel">
                 <div class="right-tabs">
                     <button class="right-tab active" data-tab="result">識別結果</button>
-                    <button class="right-tab" data-tab="queue">待辨識清單</button>
                     <button class="right-tab" data-tab="history">歷史記錄</button>
                 </div>
 
@@ -350,6 +710,14 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Manual Save Button at Top -->
+                    <div class="result-actions-top">
+                        <button class="btn btn-secondary" id="copyResult">📋 複製</button>
+                        <button class="btn btn-secondary" id="saveResult">💾 儲存</button>
+                        <button class="btn btn-secondary" id="clearResult">🗑 清除</button>
+                    </div>
+
                     <div class="result-container">
                         <div class="result-content" id="resultContent"><span style="color:var(--text-secondary)">識別結果將顯示於此...</span></div>
                         <div class="loading-overlay" id="resultLoading">
@@ -358,28 +726,11 @@
                             <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
                         </div>
                     </div>
-                    <div class="result-actions">
-                        <button class="btn btn-secondary" id="copyResult">複製</button>
-                        <button class="btn btn-secondary" id="saveResult">儲存</button>
-                        <button class="btn btn-secondary" id="clearResult">清除</button>
-                    </div>
-                </div>
-
-                <div class="tab-content" data-tab-content="queue">
-                    <div class="queue-container" id="queueContainer">
-                        <p style="color:var(--text-secondary);text-align:center;padding:20px;font-size:11px;">尚無待辨識項目<br>請上傳檔案後加入清單</p>
-                    </div>
-                    <div class="queue-summary" id="queueSummary">總計: 0 個檔案, 0 頁</div>
-                    <div class="queue-actions">
-                        <button class="btn btn-secondary" id="addToQueue">加入清單</button>
-                        <button class="btn btn-secondary" id="clearQueue">清空</button>
-                        <button class="btn btn-primary" id="processQueue">辨識全部</button>
-                    </div>
                 </div>
 
                 <div class="tab-content" data-tab-content="history">
                     <div class="result-content" id="historyContent"><p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p></div>
-                    <div class="result-actions"><button class="btn btn-secondary" id="clearHistory">清除歷史</button></div>
+                    <div class="result-actions-top"><button class="btn btn-secondary" id="clearHistory">清除歷史</button></div>
                 </div>
             </section>
         </main>
@@ -483,26 +834,47 @@
 
     <script>
     const state = {
-        images: [], currentIndex: -1, zoom: 1, rotation: 0,
-        panX: 0, panY: 0, isPanning: false, panStart: { x: 0, y: 0 },
-        isSelecting: false, selectionRect: null,
-        currentMode: 'text', ocrScope: 'current', outputFormat: 'txt',
+        images: [],          // All loaded images
+        currentIndex: -1,
+        zoom: 1,
+        rotation: 0,
+        panX: 0,
+        panY: 0,
+        isPanning: false,
+        panStart: { x: 0, y: 0 },
+        isSelecting: false,
+        selectionRect: null,
+        currentMode: 'text',
+        ocrScope: 'current',
+        outputFormat: 'txt',
         settings: {
             apiEndpoint: 'http://localhost:1234/v1/chat/completions',
             model: 'qwen3-vl-8b-instruct',
-            temperature: 0.1, maxTokens: 4096, maxResolution: 2048
+            temperature: 0.1,
+            maxTokens: 4096,
+            maxResolution: 2048
         },
-        queue: [], currentQueueIndex: -1, results: {}, history: [],
-        lastResult: '', isOnline: false,
-        pendingPdf: null, pdfNumPages: 0, outputDirHandle: null
+        queue: [],               // Queue items with file info
+        currentQueueIndex: -1,
+        selectedPages: new Set(), // Selected page indices for OCR
+        results: {},
+        history: [],
+        lastResult: '',
+        isOnline: false,
+        pendingPdf: null,
+        pdfCache: {},            // Cache PDF references (lazy loading)
+        outputDirHandle: null
     };
 
     const $ = s => document.querySelector(s);
     const $$ = s => document.querySelectorAll(s);
 
     document.addEventListener('DOMContentLoaded', () => {
-        loadSettings(); loadHistory(); setupEvents();
-        checkConnection(); refreshModels();
+        loadSettings();
+        loadHistory();
+        setupEvents();
+        checkConnection();
+        refreshModels();
         setInterval(checkConnection, 30000);
     });
 
@@ -533,6 +905,7 @@
     }
 
     function setupEvents() {
+        // File drop zone
         $('#dropZone').onclick = () => $('#fileInput').click();
         $('#dropZone').ondragover = e => { e.preventDefault(); $('#dropZone').classList.add('active'); };
         $('#dropZone').ondragleave = () => $('#dropZone').classList.remove('active');
@@ -548,35 +921,46 @@
         $('#zoomOut').onclick = () => setZoom(state.zoom * 0.8);
         $('#zoomFit').onclick = resetView;
         $('#selectRegion').onclick = toggleSelect;
-        $('#clearAll').onclick = clearAll;
+        $('#clearCurrent').onclick = removeCurrent;
 
+        // Pan events
         const w = $('#imageWrapper');
         w.onmousedown = startPan;
         document.onmousemove = doPan;
         document.onmouseup = endPan;
         $('#imageContainer').onwheel = e => { e.preventDefault(); setZoom(state.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); };
 
+        // Page selection controls
+        $('#selectAll').onclick = selectAllPages;
+        $('#selectNone').onclick = selectNoPages;
+        $('#autoSelect').onclick = autoRecognize;
+
+        // Tab switching
         $$('.right-tab').forEach(t => t.onclick = () => switchTab(t.dataset.tab));
         $$('.mode-btn').forEach(b => b.onclick = () => setMode(b.dataset.mode));
         $$('input[name="ocrScope"]').forEach(r => r.onchange = () => state.ocrScope = r.value);
         $('#outputFormat').onchange = e => state.outputFormat = e.target.value;
 
+        // Result actions
         $('#copyResult').onclick = copyResult;
         $('#saveResult').onclick = saveManual;
         $('#clearResult').onclick = () => { state.lastResult = ''; $('#resultContent').innerHTML = '<span style="color:var(--text-secondary)">識別結果將顯示於此...</span>'; };
         $('#startOCR').onclick = startOCR;
 
+        // Queue actions
         $('#addToQueue').onclick = addToQueue;
-        $('#clearQueue').onclick = () => { if (state.queue.length && confirm('清空清單?')) { state.queue = []; renderQueue(); } };
+        $('#clearQueue').onclick = () => { if (state.queue.length && confirm('清空清單?')) { state.queue = []; state.currentQueueIndex = -1; renderQueue(); updateThumbnailsForQueue(); } };
         $('#processQueue').onclick = processAll;
         $('#clearHistory').onclick = clearHistory;
 
+        // Settings
         $('#settingsBtn').onclick = () => $('#settingsModal').classList.add('visible');
         $('#closeSettings').onclick = () => $('#settingsModal').classList.remove('visible');
         $('#saveSettings').onclick = saveSettings;
         $('#resetSettings').onclick = () => {
             state.settings = { apiEndpoint: 'http://localhost:1234/v1/chat/completions', model: 'qwen3-vl-8b-instruct', temperature: 0.1, maxTokens: 4096, maxResolution: 2048 };
-            applySettings(); toast('已重設', 'success');
+            applySettings();
+            toast('已重設', 'success');
         };
         $('#temperature').oninput = e => $('#tempValue').textContent = e.target.value;
         $('#maxTokens').oninput = e => $('#maxTokensValue').textContent = e.target.value;
@@ -584,26 +968,36 @@
         $('#headerModelSelect').onchange = e => { state.settings.model = e.target.value; localStorage.setItem('qwen-ocr-settings', JSON.stringify(state.settings)); };
         $('#headerRefreshModels').onclick = refreshModels;
 
+        // PDF modal
         $('#closePdfPage').onclick = $('#cancelPdfPage').onclick = () => $('#pdfPageModal').classList.remove('visible');
         $('#confirmPdfPages').onclick = confirmPdf;
         $('#pdfPageInput').oninput = validatePages;
 
+        // Camera modal
         $('#closeCamera').onclick = $('#cancelCamera').onclick = closeCamera;
         $('#capturePhoto').onclick = capture;
+
+        // Theme
         $('#themeToggle').onclick = () => { document.body.classList.toggle('light-theme'); localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark'); };
         if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
 
+        // Keyboard shortcuts
         document.onkeydown = e => {
             if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); startOCR(); }
             if (e.key === 'Escape') $$('.modal-overlay').forEach(m => m.classList.remove('visible'));
         };
     }
 
+    // ============ FILE PROCESSING ============
+
     async function processFiles(files) {
         $('#imageLoading').classList.add('visible');
         for (const f of files) {
-            if (f.type === 'application/pdf') await showPdfModal(f);
-            else if (f.type.startsWith('image/')) await processImage(f);
+            if (f.type === 'application/pdf') {
+                await showPdfModal(f);
+            } else if (f.type.startsWith('image/')) {
+                await processImage(f);
+            }
         }
         $('#imageLoading').classList.remove('visible');
         if (state.images.length && state.currentIndex === -1) selectImg(0);
@@ -617,11 +1011,16 @@
                 img.onload = () => {
                     const c = preprocess(img);
                     state.images.push({
-                        id: Date.now() + Math.random(), canvas: c, fileName: file.name,
-                        rotation: 0, thumbnail: thumb(c), pageNum, totalPages
+                        id: Date.now() + Math.random(),
+                        canvas: c,
+                        fileName: file.name,
+                        rotation: 0,
+                        thumbnail: thumb(c),
+                        pageNum,
+                        totalPages
                     });
                     renderThumbs();
-                    $('#dropZone').classList.add('hidden');
+                    $('#noImageHint').classList.add('hidden');
                     r();
                 };
                 img.src = e.target.result;
@@ -634,8 +1033,13 @@
         const c = document.createElement('canvas'), ctx = c.getContext('2d');
         let w = img.width, h = img.height;
         const m = state.settings.maxResolution;
-        if (m > 0 && (w > m || h > m)) { const r = Math.min(m / w, m / h); w *= r; h *= r; }
-        c.width = w; c.height = h;
+        if (m > 0 && (w > m || h > m)) {
+            const r = Math.min(m / w, m / h);
+            w *= r;
+            h *= r;
+        }
+        c.width = w;
+        c.height = h;
         ctx.drawImage(img, 0, 0, w, h);
         return c;
     }
@@ -643,14 +1047,24 @@
     function thumb(c) {
         const t = document.createElement('canvas'), ctx = t.getContext('2d');
         const r = Math.min(40 / c.width, 40 / c.height);
-        t.width = c.width * r; t.height = c.height * r;
+        t.width = c.width * r;
+        t.height = c.height * r;
         ctx.drawImage(c, 0, 0, t.width, t.height);
         return t.toDataURL('image/jpeg', 0.6);
     }
 
+    // ============ PDF LAZY LOADING ============
+
     async function showPdfModal(file) {
-        const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
-        state.pendingPdf = { file, pdf }; state.pdfNumPages = pdf.numPages;
+        // Only read page count, don't render pages yet
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+        // Cache PDF reference for later use
+        const pdfId = `pdf_${Date.now()}`;
+        state.pdfCache[pdfId] = { pdf, file, arrayBuffer };
+        state.pendingPdf = { pdfId, file, pdf };
+
         $('#pdfFileName').textContent = file.name;
         $('#pdfTotalPages').textContent = pdf.numPages;
         $('#pdfPageInput').value = `1-${pdf.numPages}`;
@@ -679,7 +1093,8 @@
     }
 
     function validatePages() {
-        const { pages, errors } = parseRange($('#pdfPageInput').value, state.pdfNumPages);
+        const totalPages = state.pendingPdf?.pdf?.numPages || 1;
+        const { pages, errors } = parseRange($('#pdfPageInput').value, totalPages);
         if (errors.length) {
             $('#pdfPageError').textContent = errors.join('; ');
             $('#pdfPageError').style.display = 'block';
@@ -691,45 +1106,112 @@
     }
 
     async function confirmPdf() {
-        const { pages, errors } = parseRange($('#pdfPageInput').value, state.pdfNumPages);
+        const totalPages = state.pendingPdf.pdf.numPages;
+        const { pages, errors } = parseRange($('#pdfPageInput').value, totalPages);
         if (errors.length) { toast('頁面範圍有誤', 'error'); return; }
         if (!pages.length) { toast('請選擇頁面', 'error'); return; }
 
         $('#pdfPageModal').classList.remove('visible');
         $('#imageLoading').classList.add('visible');
 
-        const { file, pdf } = state.pendingPdf;
+        const { file, pdf, pdfId } = state.pendingPdf;
         try {
-            for (const p of pages) {
-                const page = await pdf.getPage(p);
-                const vp = page.getViewport({ scale: 2 });
-                const c = document.createElement('canvas');
-                c.width = vp.width; c.height = vp.height;
-                await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+            // Add to queue with lazy loading info
+            state.queue.push({
+                id: Date.now() + Math.random(),
+                fileName: file.name,
+                pdfId: pdfId,
+                pageRange: pages.join(','),
+                pages: pages,
+                totalPages: totalPages,
+                loaded: false,     // Marks if pages are loaded into images array
+                imageIndices: []   // Will store indices of loaded images
+            });
 
-                const img = new Image();
-                await new Promise(r => { img.onload = r; img.src = c.toDataURL('image/png'); });
-                const proc = preprocess(img);
-                state.images.push({
-                    id: Date.now() + Math.random(), canvas: proc, fileName: file.name,
-                    rotation: 0, thumbnail: thumb(proc), pageNum: p, totalPages: state.pdfNumPages
-                });
-            }
+            // Only load the first page for preview
+            await loadPdfPage(pdfId, pages[0], file.name, totalPages);
+
+            renderQueue();
             renderThumbs();
-            $('#dropZone').classList.add('hidden');
+            $('#noImageHint').classList.add('hidden');
+
             if (state.currentIndex === -1) selectImg(0);
-            toast(`已載入 ${pages.length} 頁`, 'success');
-        } catch (e) { toast('PDF 錯誤: ' + e.message, 'error'); }
-        finally { $('#imageLoading').classList.remove('visible'); state.pendingPdf = null; }
+            toast(`已加入清單: ${file.name} (${pages.length} 頁)`, 'success');
+        } catch (e) {
+            toast('PDF 錯誤: ' + e.message, 'error');
+        } finally {
+            $('#imageLoading').classList.remove('visible');
+            state.pendingPdf = null;
+        }
     }
+
+    async function loadPdfPage(pdfId, pageNum, fileName, totalPages) {
+        const cached = state.pdfCache[pdfId];
+        if (!cached) throw new Error('PDF not in cache');
+
+        const page = await cached.pdf.getPage(pageNum);
+        const vp = page.getViewport({ scale: 2 });
+        const c = document.createElement('canvas');
+        c.width = vp.width;
+        c.height = vp.height;
+        await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+
+        const img = new Image();
+        await new Promise(r => { img.onload = r; img.src = c.toDataURL('image/png'); });
+        const proc = preprocess(img);
+
+        const imgObj = {
+            id: Date.now() + Math.random(),
+            canvas: proc,
+            fileName: fileName,
+            pdfId: pdfId,
+            rotation: 0,
+            thumbnail: thumb(proc),
+            pageNum: pageNum,
+            totalPages: totalPages
+        };
+
+        state.images.push(imgObj);
+        return state.images.length - 1;
+    }
+
+    async function loadPdfPagesOnDemand(queueItem) {
+        // Load all pages for a queue item if not already loaded
+        if (queueItem.loaded) return;
+
+        $('#imageLoading').classList.add('visible');
+        try {
+            const existingIndices = state.images
+                .map((img, idx) => img.fileName === queueItem.fileName && img.pdfId === queueItem.pdfId ? idx : -1)
+                .filter(idx => idx >= 0);
+            const loadedPages = existingIndices.map(idx => state.images[idx].pageNum);
+
+            for (const pageNum of queueItem.pages) {
+                if (!loadedPages.includes(pageNum)) {
+                    const idx = await loadPdfPage(queueItem.pdfId, pageNum, queueItem.fileName, queueItem.totalPages);
+                    existingIndices.push(idx);
+                }
+            }
+
+            queueItem.loaded = true;
+            queueItem.imageIndices = existingIndices;
+            renderThumbs();
+        } finally {
+            $('#imageLoading').classList.remove('visible');
+        }
+    }
+
+    // ============ IMAGE DISPLAY ============
 
     function selectImg(i) {
         if (i < 0 || i >= state.images.length) return;
         state.currentIndex = i;
-        state.zoom = 1; state.panX = 0; state.panY = 0;
+        state.zoom = 1;
+        state.panX = 0;
+        state.panY = 0;
         state.rotation = state.images[i].rotation;
         renderImg();
-        $$('.thumbnail').forEach((t, j) => t.classList.toggle('active', j === i));
+        renderThumbs();
     }
 
     function renderImg() {
@@ -754,65 +1236,207 @@
     }
 
     function renderThumbs() {
-        const bar = $('#thumbnailsBar'); bar.innerHTML = '';
-        state.images.forEach((img, i) => {
-            const wrap = document.createElement('div'); wrap.className = 'thumbnail-wrapper';
+        const bar = $('#thumbnailsBar');
+        bar.innerHTML = '';
+
+        // Filter images based on selected queue item
+        let imagesToShow = state.images;
+        if (state.currentQueueIndex >= 0 && state.queue[state.currentQueueIndex]) {
+            const q = state.queue[state.currentQueueIndex];
+            imagesToShow = state.images.filter(img =>
+                img.fileName === q.fileName &&
+                (!q.pdfId || img.pdfId === q.pdfId)
+            );
+        }
+
+        imagesToShow.forEach((img) => {
+            const globalIndex = state.images.indexOf(img);
+            const wrap = document.createElement('div');
+            wrap.className = 'thumbnail-wrapper';
+
             const t = document.createElement('img');
-            t.className = 'thumbnail' + (i === state.currentIndex ? ' active' : '');
+            t.className = 'thumbnail';
+            if (globalIndex === state.currentIndex) t.classList.add('active');
+            if (state.selectedPages.has(globalIndex)) t.classList.add('selected');
             t.src = img.thumbnail;
-            t.onclick = () => selectImg(i);
-            const x = document.createElement('button');
-            x.className = 'thumbnail-close'; x.textContent = '×';
-            x.onclick = e => { e.stopPropagation(); removeImg(i); };
-            wrap.appendChild(t); wrap.appendChild(x);
+            t.onclick = () => selectImg(globalIndex);
+
+            // Checkbox for page selection
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'thumbnail-checkbox';
+            cb.checked = state.selectedPages.has(globalIndex);
+            cb.onclick = e => {
+                e.stopPropagation();
+                if (cb.checked) state.selectedPages.add(globalIndex);
+                else state.selectedPages.delete(globalIndex);
+                updateSelectedCount();
+                renderThumbs();
+            };
+
+            wrap.appendChild(cb);
+            wrap.appendChild(t);
+
             if (img.pageNum) {
                 const p = document.createElement('div');
-                p.className = 'page-indicator'; p.textContent = img.pageNum;
+                p.className = 'page-indicator';
+                p.textContent = img.pageNum;
                 wrap.appendChild(p);
             }
             bar.appendChild(wrap);
         });
+
+        updateSelectedCount();
     }
 
-    function removeImg(i) {
-        state.images.splice(i, 1);
+    function updateSelectedCount() {
+        $('#selectedCount').textContent = `已選: ${state.selectedPages.size}`;
+    }
+
+    function removeCurrent() {
+        if (state.currentIndex < 0) return;
+        state.selectedPages.delete(state.currentIndex);
+        state.images.splice(state.currentIndex, 1);
+
         if (!state.images.length) {
             state.currentIndex = -1;
-            $('#dropZone').classList.remove('hidden');
+            resetView();
+            $('#noImageHint').classList.remove('hidden');
             $('#imageWrapper').style.display = 'none';
-            $('#zoomIndicator').style.display = 'none';
-        } else if (state.currentIndex >= state.images.length) selectImg(state.images.length - 1);
-        else if (state.currentIndex === i) selectImg(Math.min(i, state.images.length - 1));
+            $('#thumbnailsBar').innerHTML = '';
+        } else if (state.currentIndex >= state.images.length) {
+            selectImg(state.images.length - 1);
+        } else {
+            selectImg(Math.min(state.currentIndex, state.images.length - 1));
+        }
         renderThumbs();
     }
 
-    function rotate(deg) { if (state.currentIndex < 0) return; state.rotation = (state.rotation + deg + 360) % 360; state.images[state.currentIndex].rotation = state.rotation; renderImg(); }
-    function setZoom(z) { state.zoom = Math.max(0.25, Math.min(5, z)); renderImg(); }
-    function resetView() { state.zoom = 1; state.panX = 0; state.panY = 0; renderImg(); }
+    function rotate(deg) {
+        if (state.currentIndex < 0) return;
+        state.rotation = (state.rotation + deg + 360) % 360;
+        state.images[state.currentIndex].rotation = state.rotation;
+        renderImg();
+    }
 
-    function startPan(e) { if (state.isSelecting) return; state.isPanning = true; state.panStart = { x: e.clientX - state.panX, y: e.clientY - state.panY }; $('#imageWrapper').classList.add('dragging'); }
-    function doPan(e) { if (!state.isPanning) return; state.panX = e.clientX - state.panStart.x; state.panY = e.clientY - state.panStart.y; $('#imageWrapper').style.transform = `translate(calc(-50% + ${state.panX}px), calc(-50% + ${state.panY}px)) scale(${state.zoom})`; }
-    function endPan() { state.isPanning = false; $('#imageWrapper').classList.remove('dragging'); }
+    function setZoom(z) {
+        state.zoom = Math.max(0.25, Math.min(5, z));
+        renderImg();
+    }
 
-    function toggleSelect() { state.isSelecting = !state.isSelecting; $('#imageCanvas').style.cursor = state.isSelecting ? 'crosshair' : 'grab'; $('#selectRegion').classList.toggle('active', state.isSelecting); }
+    function resetView() {
+        state.zoom = 1;
+        state.panX = 0;
+        state.panY = 0;
+        if (state.currentIndex >= 0) renderImg();
+    }
+
+    function startPan(e) {
+        if (state.isSelecting) return;
+        state.isPanning = true;
+        state.panStart = { x: e.clientX - state.panX, y: e.clientY - state.panY };
+        $('#imageWrapper').classList.add('dragging');
+    }
+
+    function doPan(e) {
+        if (!state.isPanning) return;
+        state.panX = e.clientX - state.panStart.x;
+        state.panY = e.clientY - state.panStart.y;
+        $('#imageWrapper').style.transform = `translate(calc(-50% + ${state.panX}px), calc(-50% + ${state.panY}px)) scale(${state.zoom})`;
+    }
+
+    function endPan() {
+        state.isPanning = false;
+        $('#imageWrapper').classList.remove('dragging');
+    }
+
+    function toggleSelect() {
+        state.isSelecting = !state.isSelecting;
+        $('#imageCanvas').style.cursor = state.isSelecting ? 'crosshair' : 'grab';
+        $('#selectRegion').classList.toggle('active', state.isSelecting);
+    }
+
+    // ============ PAGE SELECTION CONTROLS ============
+
+    function selectAllPages() {
+        let imagesToSelect = state.images;
+        if (state.currentQueueIndex >= 0 && state.queue[state.currentQueueIndex]) {
+            const q = state.queue[state.currentQueueIndex];
+            imagesToSelect = state.images.filter(img =>
+                img.fileName === q.fileName && (!q.pdfId || img.pdfId === q.pdfId)
+            );
+        }
+        imagesToSelect.forEach(img => {
+            state.selectedPages.add(state.images.indexOf(img));
+        });
+        renderThumbs();
+        toast('已全選', 'success');
+    }
+
+    function selectNoPages() {
+        let imagesToDeselect = state.images;
+        if (state.currentQueueIndex >= 0 && state.queue[state.currentQueueIndex]) {
+            const q = state.queue[state.currentQueueIndex];
+            imagesToDeselect = state.images.filter(img =>
+                img.fileName === q.fileName && (!q.pdfId || img.pdfId === q.pdfId)
+            );
+        }
+        imagesToDeselect.forEach(img => {
+            state.selectedPages.delete(state.images.indexOf(img));
+        });
+        renderThumbs();
+        toast('已取消全選', 'info');
+    }
+
+    async function autoRecognize() {
+        if (state.selectedPages.size === 0) {
+            toast('請先勾選要辨識的頁面', 'error');
+            return;
+        }
+
+        const indices = [...state.selectedPages].sort((a, b) => a - b);
+        await ocrMultiplePages(indices);
+    }
+
+    // ============ QUEUE MANAGEMENT ============
 
     function addToQueue() {
-        if (!state.images.length) { toast('請先上傳檔案', 'error'); return; }
+        if (!state.images.length) {
+            toast('請先上傳檔案', 'error');
+            return;
+        }
+
+        // Group images by fileName
         const groups = {};
         state.images.forEach((img, i) => {
             const k = img.fileName;
-            if (!groups[k]) groups[k] = { fileName: k, pages: [], totalPages: img.totalPages || 1 };
+            if (!groups[k]) {
+                groups[k] = {
+                    fileName: k,
+                    pdfId: img.pdfId,
+                    pages: [],
+                    totalPages: img.totalPages || 1
+                };
+            }
             groups[k].pages.push({ index: i, pageNum: img.pageNum || 1 });
         });
+
         Object.values(groups).forEach(g => {
-            if (!state.queue.find(q => q.fileName === g.fileName)) {
+            // Check if already in queue
+            if (!state.queue.find(q => q.fileName === g.fileName && q.pdfId === g.pdfId)) {
                 state.queue.push({
-                    id: Date.now() + Math.random(), fileName: g.fileName,
+                    id: Date.now() + Math.random(),
+                    fileName: g.fileName,
+                    pdfId: g.pdfId,
                     pageRange: g.pages.map(p => p.pageNum).join(','),
-                    pages: g.pages, totalPages: g.totalPages
+                    pages: g.pages.map(p => p.pageNum),
+                    totalPages: g.totalPages,
+                    loaded: true,
+                    imageIndices: g.pages.map(p => p.index)
                 });
             }
         });
+
         renderQueue();
         toast('已加入清單', 'success');
     }
@@ -820,15 +1444,15 @@
     function renderQueue() {
         const c = $('#queueContainer');
         if (!state.queue.length) {
-            c.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:20px;font-size:11px;">尚無待辨識項目</p>';
+            c.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:15px;font-size:10px;">尚無待辨識項目</p>';
             $('#queueSummary').textContent = '總計: 0 個檔案, 0 頁';
             return;
         }
+
         let total = 0;
         c.innerHTML = state.queue.map((q, i) => {
-            const { pages, errors } = parseRange(q.pageRange, q.totalPages);
-            total += pages.length;
-            const err = errors.length ? `<div class="queue-page-error">${errors[0]}</div>` : '';
+            const pageCount = q.pages ? q.pages.length : 0;
+            total += pageCount;
             return `<div class="queue-item${state.currentQueueIndex === i ? ' active' : ''}" data-i="${i}">
                 <div class="queue-item-header" onclick="selectQueue(${i})">
                     <span class="queue-item-name">${i + 1}. 📄 ${q.fileName}</span>
@@ -839,23 +1463,64 @@
                     </div>
                 </div>
                 <div class="queue-item-body">
-                    <label style="font-size:9px;color:var(--text-secondary)">頁面:</label>
-                    <input type="text" class="queue-page-input" value="${q.pageRange}" onchange="updateQueue(${i},this.value)" placeholder="1,3,5-10">
-                    <div class="queue-page-info">共 ${pages.length} 頁 / 總 ${q.totalPages} 頁</div>
-                    ${err}
+                    <div class="queue-page-info">${pageCount} 頁 / 總 ${q.totalPages} 頁${q.loaded ? '' : ' (未載入)'}</div>
                 </div>
             </div>`;
         }).join('');
         $('#queueSummary').textContent = `總計: ${state.queue.length} 個檔案, ${total} 頁`;
     }
 
-    window.selectQueue = i => { state.currentQueueIndex = i; renderQueue(); const img = state.images.find(m => m.fileName === state.queue[i].fileName); if (img) selectImg(state.images.indexOf(img)); };
-    window.moveQueue = (i, d) => { const n = i + d; if (n < 0 || n >= state.queue.length) return; [state.queue[i], state.queue[n]] = [state.queue[n], state.queue[i]]; if (state.currentQueueIndex === i) state.currentQueueIndex = n; else if (state.currentQueueIndex === n) state.currentQueueIndex = i; renderQueue(); };
-    window.removeQueue = i => { state.queue.splice(i, 1); if (state.currentQueueIndex >= state.queue.length) state.currentQueueIndex = state.queue.length - 1; renderQueue(); };
-    window.updateQueue = (i, v) => { const { errors } = parseRange(v, state.queue[i].totalPages); if (errors.length) toast('範圍有誤: ' + errors[0], 'error'); else state.queue[i].pageRange = v; renderQueue(); };
+    function updateThumbnailsForQueue() {
+        renderThumbs();
+    }
+
+    window.selectQueue = async function(i) {
+        state.currentQueueIndex = i;
+        renderQueue();
+
+        const q = state.queue[i];
+        if (!q) return;
+
+        // Load pages on demand if not loaded
+        if (!q.loaded && q.pdfId) {
+            await loadPdfPagesOnDemand(q);
+        }
+
+        // Show thumbnails for this file only
+        renderThumbs();
+
+        // Select first image of this file
+        const firstImg = state.images.find(m =>
+            m.fileName === q.fileName && (!q.pdfId || m.pdfId === q.pdfId)
+        );
+        if (firstImg) selectImg(state.images.indexOf(firstImg));
+    };
+
+    window.moveQueue = function(i, d) {
+        const n = i + d;
+        if (n < 0 || n >= state.queue.length) return;
+        [state.queue[i], state.queue[n]] = [state.queue[n], state.queue[i]];
+        if (state.currentQueueIndex === i) state.currentQueueIndex = n;
+        else if (state.currentQueueIndex === n) state.currentQueueIndex = i;
+        renderQueue();
+    };
+
+    window.removeQueue = function(i) {
+        state.queue.splice(i, 1);
+        if (state.currentQueueIndex >= state.queue.length) {
+            state.currentQueueIndex = state.queue.length - 1;
+        }
+        renderQueue();
+        renderThumbs();
+    };
+
+    // ============ OCR PROCESSING ============
 
     async function startOCR() {
-        if (!state.images.length) { toast('請先上傳圖片', 'error'); return; }
+        if (!state.images.length) {
+            toast('請先上傳圖片', 'error');
+            return;
+        }
         if (state.ocrScope === 'current') await ocrCurrent();
         else if (state.ocrScope === 'task') await ocrTask();
         else await processAll();
@@ -870,72 +1535,179 @@
             const r = await callAPI($('#imageCanvas'));
             const img = state.images[state.currentIndex];
             state.lastResult = r;
+
             let html = '';
             if (img.pageNum) html += `<div class="result-page-header">--- 第 ${img.pageNum} 頁 ---</div>`;
             html += r;
             $('#resultContent').innerHTML = html;
+
             $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
             saveHistory(r, img.fileName);
-        } catch (e) { toast('識別失敗: ' + e.message, 'error'); }
-        finally { $('#resultLoading').classList.remove('visible'); }
+        } catch (e) {
+            toast('識別失敗: ' + e.message, 'error');
+        } finally {
+            $('#resultLoading').classList.remove('visible');
+        }
     }
 
     async function ocrTask() {
         const cur = state.images[state.currentIndex];
         if (!cur) return;
-        const imgs = state.images.filter(m => m.fileName === cur.fileName);
-        await processSet(imgs, cur.fileName);
+
+        // Load all pages for current file if it's a PDF
+        const queueItem = state.queue.find(q => q.fileName === cur.fileName && q.pdfId === cur.pdfId);
+        if (queueItem && !queueItem.loaded) {
+            await loadPdfPagesOnDemand(queueItem);
+        }
+
+        const imgs = state.images.filter(m => m.fileName === cur.fileName && m.pdfId === cur.pdfId);
+        const indices = imgs.map(img => state.images.indexOf(img));
+        await ocrMultiplePages(indices, cur.fileName);
+    }
+
+    async function ocrMultiplePages(indices, fileName = null) {
+        if (!indices.length) return;
+
+        $('#resultLoading').classList.add('visible');
+        const t0 = performance.now();
+        const results = [];
+        const name = fileName || state.images[indices[0]]?.fileName || 'unknown';
+
+        // Clear result area and show file header immediately
+        $('#resultContent').innerHTML = `<div class="result-file-header">📄 ${name}</div>`;
+
+        try {
+            for (let i = 0; i < indices.length; i++) {
+                const idx = indices[i];
+                const img = state.images[idx];
+                if (!img) continue;
+
+                selectImg(idx);
+                await delay(100);
+
+                $('#loadingText').textContent = `識別 ${i + 1}/${indices.length}...`;
+                $('#progressFill').style.width = `${((i + 1) / indices.length) * 100}%`;
+
+                const r = await callAPI($('#imageCanvas'));
+                results.push({ pageNum: img.pageNum || (i + 1), text: r });
+
+                // Progressive display: append result immediately after each page
+                const pageHeader = document.createElement('div');
+                pageHeader.className = 'result-page-header';
+                pageHeader.textContent = `--- 第 ${img.pageNum || (i + 1)} 頁 ---`;
+
+                const pageContent = document.createElement('div');
+                pageContent.textContent = r;
+
+                $('#resultContent').appendChild(pageHeader);
+                $('#resultContent').appendChild(pageContent);
+
+                // Scroll to bottom to show new content
+                $('#resultContent').scrollTop = $('#resultContent').scrollHeight;
+            }
+
+            state.results[name] = results;
+            state.lastResult = results.map(r => `--- 第 ${r.pageNum} 頁 ---\n${r.text}`).join('\n\n');
+
+            await autoSave(name, results);
+
+            $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
+            toast('識別完成', 'success');
+            saveHistory(state.lastResult, name);
+        } catch (e) {
+            toast('識別失敗: ' + e.message, 'error');
+        } finally {
+            $('#resultLoading').classList.remove('visible');
+            $('#progressFill').style.width = '0%';
+        }
     }
 
     async function processAll() {
-        if (!state.queue.length) { toast('清單為空', 'error'); return; }
+        if (!state.queue.length) {
+            toast('清單為空', 'error');
+            return;
+        }
+
         $('#resultLoading').classList.add('visible');
-        const t0 = performance.now(), all = {};
+        const t0 = performance.now();
+        const all = {};
+
+        // Clear result area
+        $('#resultContent').innerHTML = '';
+
         try {
             for (let qi = 0; qi < state.queue.length; qi++) {
                 const q = state.queue[qi];
-                const { pages } = parseRange(q.pageRange, q.totalPages);
-                const imgs = state.images.filter(m => m.fileName === q.fileName && pages.includes(m.pageNum || 1));
+
+                // Load pages on demand
+                if (!q.loaded && q.pdfId) {
+                    await loadPdfPagesOnDemand(q);
+                }
+
+                const imgs = state.images.filter(m =>
+                    m.fileName === q.fileName &&
+                    (!q.pdfId || m.pdfId === q.pdfId) &&
+                    q.pages.includes(m.pageNum || 1)
+                );
+
+                if (!imgs.length) continue;
+
+                // Add file header
+                const fileHeader = document.createElement('div');
+                fileHeader.className = 'result-file-header';
+                fileHeader.textContent = `📄 ${q.fileName}`;
+                $('#resultContent').appendChild(fileHeader);
+
                 $('#loadingText').textContent = `處理 ${qi + 1}/${state.queue.length}: ${q.fileName}`;
-                $('#progressFill').style.width = `${((qi + 1) / state.queue.length) * 100}%`;
 
                 const results = [];
-                for (const img of imgs) {
+                for (let pi = 0; pi < imgs.length; pi++) {
+                    const img = imgs[pi];
                     selectImg(state.images.indexOf(img));
                     await delay(100);
+
+                    $('#progressFill').style.width = `${((qi + pi / imgs.length) / state.queue.length) * 100}%`;
+
                     const r = await callAPI($('#imageCanvas'));
-                    results.push({ pageNum: img.pageNum || 1, text: r });
+                    results.push({ pageNum: img.pageNum || (pi + 1), text: r });
+
+                    // Progressive display
+                    const pageHeader = document.createElement('div');
+                    pageHeader.className = 'result-page-header';
+                    pageHeader.textContent = `--- 第 ${img.pageNum || (pi + 1)} 頁 ---`;
+
+                    const pageContent = document.createElement('div');
+                    pageContent.textContent = r;
+
+                    $('#resultContent').appendChild(pageHeader);
+                    $('#resultContent').appendChild(pageContent);
+                    $('#resultContent').scrollTop = $('#resultContent').scrollHeight;
                 }
+
                 all[q.fileName] = results;
                 await autoSave(q.fileName, results);
             }
+
             state.results = all;
-            displayAll(all);
+
+            // Build lastResult for copy function
+            let txt = '';
+            Object.entries(all).forEach(([name, results]) => {
+                txt += `\n${'='.repeat(40)}\n📄 ${name}\n${'='.repeat(40)}\n\n`;
+                results.forEach(r => {
+                    txt += `--- 第 ${r.pageNum} 頁 ---\n${r.text}\n\n`;
+                });
+            });
+            state.lastResult = txt;
+
             $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
             toast('全部識別完成', 'success');
-        } catch (e) { toast('識別失敗: ' + e.message, 'error'); }
-        finally { $('#resultLoading').classList.remove('visible'); $('#progressFill').style.width = '0%'; }
-    }
-
-    async function processSet(imgs, fileName) {
-        $('#resultLoading').classList.add('visible');
-        const t0 = performance.now(), results = [];
-        try {
-            for (let i = 0; i < imgs.length; i++) {
-                selectImg(state.images.indexOf(imgs[i]));
-                await delay(100);
-                $('#loadingText').textContent = `識別 ${i + 1}/${imgs.length}...`;
-                $('#progressFill').style.width = `${((i + 1) / imgs.length) * 100}%`;
-                const r = await callAPI($('#imageCanvas'));
-                results.push({ pageNum: imgs[i].pageNum || (i + 1), text: r });
-            }
-            state.results[fileName] = results;
-            displayTask(fileName, results);
-            await autoSave(fileName, results);
-            $('#processTime').textContent = `處理時間: ${((performance.now() - t0) / 1000).toFixed(2)}s`;
-            toast('識別完成', 'success');
-        } catch (e) { toast('識別失敗: ' + e.message, 'error'); }
-        finally { $('#resultLoading').classList.remove('visible'); $('#progressFill').style.width = '0%'; }
+        } catch (e) {
+            toast('識別失敗: ' + e.message, 'error');
+        } finally {
+            $('#resultLoading').classList.remove('visible');
+            $('#progressFill').style.width = '0%';
+        }
     }
 
     async function callAPI(canvas) {
@@ -965,28 +1737,12 @@
         return (await res.json()).choices[0].message.content;
     }
 
-    function displayTask(name, results) {
-        let html = `<div class="result-file-header">📄 ${name}</div>`;
-        results.forEach(r => { html += `<div class="result-page-header">--- 第 ${r.pageNum} 頁 ---</div><div>${r.text}</div>`; });
-        $('#resultContent').innerHTML = html;
-        state.lastResult = results.map(r => `--- 第 ${r.pageNum} 頁 ---\n${r.text}`).join('\n\n');
-    }
+    // ============ OUTPUT & SAVE ============
 
-    function displayAll(all) {
-        let html = '', txt = '';
-        Object.entries(all).forEach(([name, results]) => {
-            html += `<div class="result-file-header">📄 ${name}</div>`;
-            txt += `\n${'='.repeat(40)}\n📄 ${name}\n${'='.repeat(40)}\n\n`;
-            results.forEach(r => {
-                html += `<div class="result-page-header">--- 第 ${r.pageNum} 頁 ---</div><div>${r.text}</div>`;
-                txt += `--- 第 ${r.pageNum} 頁 ---\n${r.text}\n\n`;
-            });
-        });
-        $('#resultContent').innerHTML = html;
-        state.lastResult = txt;
+    function timestamp() {
+        const d = new Date();
+        return `${d.getDate().toString().padStart(2,'0')}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getFullYear()}_${d.getHours().toString().padStart(2,'0')}${d.getMinutes().toString().padStart(2,'0')}`;
     }
-
-    function timestamp() { const d = new Date(); return `${d.getDate().toString().padStart(2,'0')}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getFullYear()}_${d.getHours().toString().padStart(2,'0')}${d.getMinutes().toString().padStart(2,'0')}`; }
 
     function formatOutput(results, fmt, name) {
         const txt = results.map(r => `--- 第 ${r.pageNum} 頁 ---\n${r.text}`).join('\n\n');
@@ -1031,12 +1787,20 @@
             await w.close();
             toast(`已儲存: ${outName}`, 'success');
         } catch (e) {
-            if (e.name !== 'AbortError') download(fmt === 'docx' || fmt === 'xlsx' ? (fmt === 'docx' ? await createDocx(results, fileName) : createXlsx(results)) : formatOutput(results, fmt, fileName), outName);
+            if (e.name !== 'AbortError') {
+                // Fallback to download
+                const content = fmt === 'docx' ? await createDocx(results, fileName) :
+                               (fmt === 'xlsx' ? createXlsx(results) : formatOutput(results, fmt, fileName));
+                download(content, outName);
+            }
         }
     }
 
     async function saveManual() {
-        if (!state.lastResult) { toast('無內容', 'error'); return; }
+        if (!state.lastResult) {
+            toast('無內容可儲存', 'error');
+            return;
+        }
         const fmt = state.outputFormat, ts = timestamp();
         const name = `OCR_manual_${ts}.${fmt}`;
         const results = [{ pageNum: state.images[state.currentIndex]?.pageNum || 1, text: state.lastResult }];
@@ -1045,7 +1809,9 @@
             else if (fmt === 'xlsx') download(createXlsx(results), name);
             else download(formatOutput(results, fmt, 'manual'), name);
             toast('已下載', 'success');
-        } catch (e) { toast('儲存失敗', 'error'); }
+        } catch (e) {
+            toast('儲存失敗', 'error');
+        }
     }
 
     function download(content, name) {
@@ -1061,30 +1827,108 @@
         try {
             state.outputDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
             toast('已選擇輸出資料夾', 'success');
-        } catch (e) { if (e.name !== 'AbortError') toast('選擇失敗', 'error'); }
+        } catch (e) {
+            if (e.name !== 'AbortError') toast('選擇失敗', 'error');
+        }
     }
 
-    function setMode(m) { state.currentMode = m; $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m)); }
-    function switchTab(t) { $$('.right-tab').forEach(r => r.classList.toggle('active', r.dataset.tab === t)); $$('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === t)); }
-    function copyResult() { if (!state.lastResult) { toast('無內容', 'error'); return; } navigator.clipboard.writeText(state.lastResult).then(() => toast('已複製', 'success')); }
-    function clearAll() { if (!state.images.length) return; if (confirm('清除所有圖片?')) { state.images = []; state.currentIndex = -1; resetView(); $('#dropZone').classList.remove('hidden'); $('#imageWrapper').style.display = 'none'; $('#thumbnailsBar').innerHTML = ''; } }
-    function toast(msg, type = 'info') { const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg; $('#toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000); }
+    // ============ UTILITIES ============
+
+    function setMode(m) {
+        state.currentMode = m;
+        $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+    }
+
+    function switchTab(t) {
+        $$('.right-tab').forEach(r => r.classList.toggle('active', r.dataset.tab === t));
+        $$('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.tabContent === t));
+    }
+
+    function copyResult() {
+        if (!state.lastResult) {
+            toast('無內容', 'error');
+            return;
+        }
+        navigator.clipboard.writeText(state.lastResult).then(() => toast('已複製', 'success'));
+    }
+
+    function toast(msg, type = 'info') {
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.textContent = msg;
+        $('#toastContainer').appendChild(t);
+        setTimeout(() => {
+            t.style.opacity = '0';
+            setTimeout(() => t.remove(), 300);
+        }, 3000);
+    }
+
     function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-    function loadHistory() { const s = localStorage.getItem('qwen-ocr-history'); if (s) state.history = JSON.parse(s); }
-    function saveHistory(r, name) { state.history.unshift({ id: Date.now(), result: r.substring(0, 500), fileName: name, timestamp: new Date().toISOString() }); state.history = state.history.slice(0, 30); localStorage.setItem('qwen-ocr-history', JSON.stringify(state.history)); }
-    function clearHistory() { if (confirm('清除歷史?')) { state.history = []; localStorage.removeItem('qwen-ocr-history'); $('#historyContent').innerHTML = '<p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p>'; } }
+    function loadHistory() {
+        const s = localStorage.getItem('qwen-ocr-history');
+        if (s) state.history = JSON.parse(s);
+    }
+
+    function saveHistory(r, name) {
+        state.history.unshift({
+            id: Date.now(),
+            result: r.substring(0, 500),
+            fileName: name,
+            timestamp: new Date().toISOString()
+        });
+        state.history = state.history.slice(0, 30);
+        localStorage.setItem('qwen-ocr-history', JSON.stringify(state.history));
+    }
+
+    function clearHistory() {
+        if (confirm('清除歷史?')) {
+            state.history = [];
+            localStorage.removeItem('qwen-ocr-history');
+            $('#historyContent').innerHTML = '<p style="color:var(--text-secondary);text-align:center;">暫無歷史記錄</p>';
+        }
+    }
+
+    // ============ CAMERA ============
 
     let camStream = null;
-    async function openCamera() { try { camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); $('#cameraVideo').srcObject = camStream; $('#cameraModal').classList.add('visible'); } catch { toast('無法存取攝影機', 'error'); } }
-    function closeCamera() { if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; } $('#cameraModal').classList.remove('visible'); }
-    function capture() { const v = $('#cameraVideo'), c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); c.toBlob(b => processFiles([new File([b], 'camera.jpg', { type: 'image/jpeg' })]), 'image/jpeg', 0.9); closeCamera(); }
+
+    async function openCamera() {
+        try {
+            camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            $('#cameraVideo').srcObject = camStream;
+            $('#cameraModal').classList.add('visible');
+        } catch {
+            toast('無法存取攝影機', 'error');
+        }
+    }
+
+    function closeCamera() {
+        if (camStream) {
+            camStream.getTracks().forEach(t => t.stop());
+            camStream = null;
+        }
+        $('#cameraModal').classList.remove('visible');
+    }
+
+    function capture() {
+        const v = $('#cameraVideo'), c = document.createElement('canvas');
+        c.width = v.videoWidth;
+        c.height = v.videoHeight;
+        c.getContext('2d').drawImage(v, 0, 0);
+        c.toBlob(b => processFiles([new File([b], 'camera.jpg', { type: 'image/jpeg' })]), 'image/jpeg', 0.9);
+        closeCamera();
+    }
+
+    // ============ CONNECTION ============
 
     async function checkConnection() {
         try {
             const r = await fetch(state.settings.apiEndpoint.replace('/chat/completions', '/models'), { signal: AbortSignal.timeout(5000) });
             state.isOnline = r.ok;
-        } catch { state.isOnline = false; }
+        } catch {
+            state.isOnline = false;
+        }
         $('#connectionStatus').classList.toggle('online', state.isOnline);
         $('#connectionStatus').classList.toggle('offline', !state.isOnline);
         $('#connectionText').textContent = state.isOnline ? 'API 已連線' : 'API 離線';
@@ -1096,7 +1940,13 @@
             const d = await r.json();
             const s = $('#headerModelSelect');
             s.innerHTML = '<option value="qwen3-vl-8b-instruct">Qwen3-VL-8B</option>';
-            if (d.data) d.data.forEach(m => { if (m.id !== 'qwen3-vl-8b-instruct') s.innerHTML += `<option value="${m.id}">${m.id}</option>`; });
+            if (d.data) {
+                d.data.forEach(m => {
+                    if (m.id !== 'qwen3-vl-8b-instruct') {
+                        s.innerHTML += `<option value="${m.id}">${m.id}</option>`;
+                    }
+                });
+            }
             s.value = state.settings.model;
         } catch {}
     }
